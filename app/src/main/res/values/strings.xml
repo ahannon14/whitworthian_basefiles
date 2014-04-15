@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">The Whitworthian</string>
+    <string name="masthead_Image_String">WhitworthianMasthead</string>
+    <string name="title_Activity_Article_List">ArticleListActivity</string>
+    <string name="back_Button_String">&lt;</string>
+    <string name="header_String">The Whitworthian</string>
+    <string name="title_Activity_Genre_List">GenreListActivity</string>
+    <string name="genres">Genres</string>
+
+    <string-array name="news_Genres">
+        <item>Top News</item>
+        <item>News</item>
+        <item>Sports</item>
+        <item>Arts &amp; Culture</item>
+        <item>Opinion</item>
+    </string-array>
+
+    <string name="title_Activity_Article_View">ArticleViewActivity</string>
+    <string name="test_Title">Current Issues on Whitworth Campus</string>
+    <string name="test_Content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed ultricies ipsum. Suspendisse commodo feugiat interdum. Mauris rutrum leo eget velit laoreet ultricies consectetur nec quam. Phasellus ut neque lacinia augue consequat fermentum ut et odio. In sit amet dapibus mi, eget commodo metus. Pellentesque est nibh, mattis ac interdum et, elementum id felis. Fusce ullamcorper a felis at iaculis.
+                                Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce pellentesque mauris rhoncus facilisis vehicula. Proin semper suscipit libero, elementum elementum nisi bibendum dapibus. Maecenas sodales gravida ante, vitae varius massa bibendum vitae. Duis pharetra tortor in sollicitudin pulvinar. Etiam in purus ac dui porttitor fringilla. Aliquam commodo dolor a lacus iaculis molestie quis eget magna. Etiam ut libero libero.
+                                In hac habitasse platea dictumst. Maecenas at pulvinar lacus. Nunc tellus turpis, auctor malesuada augue id, interdum faucibus dui. Morbi rhoncus neque neque, sed imperdiet ligula porta vel. Suspendisse iaculis eu mi ac congue. Mauris at eros eget lacus dictum ornare eget ac lacus. Vivamus consequat ante eget dignissim viverra. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In venenatis aliquet odio, sit amet semper purus ornare eu. Vivamus pellentesque imperdiet tellus ut imperdiet. Aenean venenatis, tortor ac blandit dictum, lectus sapien ultricies purus, blandit malesuada urna nulla quis libero. Vestibulum pellentesque id ipsum nec malesuada. Sed mattis nisi vel velit faucibus imperdiet.
+                                In at risus arcu. Integer porta massa erat, in volutpat lacus laoreet non. Sed molestie libero vel quam scelerisque, ut pulvinar nunc rhoncus. Nam auctor, enim ac euismod varius, ipsum ligula rhoncus nunc, eu viverra odio orci ut sem. Curabitur risus arcu, cursus ultrices diam sed, commodo interdum leo. Quisque consectetur ligula non malesuada hendrerit. Curabitur quis bibendum tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam a leo sed orci eleifend pretium. Nulla tincidunt, tellus eget cursus lobortis, magna purus eleifend nulla, a tincidunt leo ligula quis justo.
+                                Etiam nec enim vulputate, pharetra ipsum eu, ornare nisi. Morbi vitae orci interdum urna pulvinar tristique. Vestibulum hendrerit auctor vestibulum. Aenean eu vulputate orci. Integer pulvinar dolor non nulla dapibus ullamcorper. Duis nec libero cursus dui tempor volutpat quis vitae ante. Nulla ut suscipit ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec vestibulum velit eu scelerisque blandit.</string>
+
+    <string-array name="article_Titles">
+        <item>Current Events at Whitworth</item>
+        <item>Just in:  Pinecones are aliens?</item>
+        <item>Other topics</item>
+        <item>Predatory Reading:  The only way to get an English degree</item>
+        <item>50 Reasons to Bash on Bash</item>
+        <item>Take a Walk Along the Hello Walk</item>
+        <item>April Fools\' Jokes Around Campus</item>
+        <item>Alway Look on the Bright Side of Life</item>
+        <item>Hiking in Spokane:  Your Guide</item>
+        <item>ASWU 2014 Debates</item>
+    </string-array>
+
+    <string name="title_activity_article_list">ArticleListActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_article_view">ArticleViewActivity</string>
+    <string name="title_activity_genre_list">GenreListActivity</string>
+
+</resources>
