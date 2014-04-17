@@ -1,5 +1,6 @@
 package mayhem.whitworthian_v2.app;
 
+import mayhem.whitworthian_v2.app.R;
 import android.app.ActionBar;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -13,12 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ArticleListActivity extends ActionBarActivity {
-    final int numGenres = 10;
-    private String[] articles = new String[numGenres];
+    final int numArticles = 10;
+    private String[] articles = new String[numArticles];
     private ListView article_List;
     private PlaceholderFragment myfragment = new PlaceholderFragment();
     private ActionBar actionBar;
@@ -27,19 +27,27 @@ public class ArticleListActivity extends ActionBarActivity {
 
 
     protected void fill_Article_String() {
-        articles = getResources().getStringArray(R.array.article_Titles);
+
+        articles = getResources().getStringArray(mayhem.whitworthian_v2.app.R.array.article_Titles);
     }
 
     protected ListView get_Article_List(View V) {
         if (article_List == null) {
-            int a = R.id.article_List_View;
-            article_List = (ListView) V.findViewById(a);
+            article_List = (ListView) V.findViewById(mayhem.whitworthian_v2.app.R.id.article_List_View);
         }
         return article_List;
     }
 
     protected void set_Article_List_Adapter(View V) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, articles);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, articles);
+        article_Selection article_Data[] = new article_Selection[numArticles];
+        for (int i = 0; i < numArticles; i++)
+        {
+            article_Data[i] = new article_Selection(mayhem.whitworthian_v2.app.R.drawable.ac_box, articles[i]);
+        }
+        get_Article_List(V);
+
+        article_Selection_Adapter adapter = new article_Selection_Adapter(this, article_Data);
         get_Article_List(V).setAdapter(adapter);
     }
 
@@ -47,12 +55,12 @@ public class ArticleListActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_list);
+        setContentView(mayhem.whitworthian_v2.app.R.layout.activity_article_list);
 
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, myfragment).commit();
+                    .add(mayhem.whitworthian_v2.app.R.id.container, myfragment).commit();
         }
 
         ActionBar ab = getActionBar();
@@ -72,7 +80,7 @@ public class ArticleListActivity extends ActionBarActivity {
 
 
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.article_list, menu);
+        getMenuInflater().inflate(mayhem.whitworthian_v2.app.R.menu.article_list, menu);
 
         View V = myfragment.rootView;
 
@@ -106,7 +114,7 @@ public class ArticleListActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
                 return true;
-            case R.id.action_settings:
+            case mayhem.whitworthian_v2.app.R.id.action_settings:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -131,7 +139,7 @@ public class ArticleListActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            rootView = inflater.inflate(R.layout.fragment_article_list,
+            rootView = inflater.inflate(mayhem.whitworthian_v2.app.R.layout.fragment_article_list,
                     container, false);
             return rootView;
         }
