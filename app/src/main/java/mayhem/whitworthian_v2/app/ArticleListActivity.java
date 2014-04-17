@@ -22,6 +22,8 @@ public class ArticleListActivity extends ActionBarActivity {
     private ListView article_List;
     private PlaceholderFragment myfragment = new PlaceholderFragment();
     private ActionBar actionBar;
+    private String my_Genre;
+    private int my_Image;
 
 
 
@@ -39,11 +41,10 @@ public class ArticleListActivity extends ActionBarActivity {
     }
 
     protected void set_Article_List_Adapter(View V) {
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, articles);
         article_Selection article_Data[] = new article_Selection[numArticles];
         for (int i = 0; i < numArticles; i++)
         {
-            article_Data[i] = new article_Selection(mayhem.whitworthian_v2.app.R.drawable.ac_box, articles[i]);
+            article_Data[i] = new article_Selection(my_Image, articles[i]);
         }
         get_Article_List(V);
 
@@ -63,15 +64,47 @@ public class ArticleListActivity extends ActionBarActivity {
                     .add(mayhem.whitworthian_v2.app.R.id.container, myfragment).commit();
         }
 
+        Bundle goodies = getIntent().getExtras();
+
+        try{
+            my_Genre = goodies.getString("this_Genre");
+        }
+        catch(NullPointerException bad){
+            my_Genre = "Top News";
+        }
+
+        //Set up action bar Title
+        if (my_Genre.equals("Top News"))
+            setTitle("The Whitworthian");
+        else
+            setTitle(my_Genre);
+
+        //Set up action bar image
+        if (my_Genre.equals("News")){
+            my_Image = R.drawable.news_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else if (my_Genre.equals("Sports")){
+            my_Image = R.drawable.sports_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else if (my_Genre.equals("Arts & Culture")){
+            my_Image = R.drawable.ac_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else if (my_Genre.equals("Opinion")){
+            my_Image = R.drawable.opinions_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else{
+            my_Image = R.drawable.whitworthian_w;
+            getActionBar().setIcon(my_Image);
+
+        }
+
+
         ActionBar ab = getActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-
-//        SpannableString s = new SpannableString("Articles");
-//        s.setSpan(new TypefaceSpan(this, "courier"), 0, s.length(),
-//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        // Update the action bar title with the TypefaceSpan instance
-//        actionBar.setTitle(s);
     }
 
 

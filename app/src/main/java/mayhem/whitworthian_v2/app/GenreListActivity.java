@@ -40,8 +40,9 @@ public class GenreListActivity extends ActionBarActivity {
         get_Genre_List(V).setAdapter(adapter);
     }
 
-    public void genre_Item_Click(View view) {
+    public void genre_Item_Click(View view, String new_Genre) {
         Intent article_List = new Intent(this, ArticleListActivity.class);
+        article_List.putExtra("this_Genre", new_Genre);
         startActivity(article_List);
     }
 
@@ -51,6 +52,7 @@ public class GenreListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_genre_list);
 
+        setTitle("The Whitworthian");
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -72,9 +74,11 @@ public class GenreListActivity extends ActionBarActivity {
         get_Genre_List(V);
         set_Genre_List_Adapter(V);
 
+        //id & position refer to the number on the list selected
         genre_List.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                genre_Item_Click(view);
+                String selected_Genre = genres[position];
+                genre_Item_Click(view, selected_Genre);
             }
         });
 

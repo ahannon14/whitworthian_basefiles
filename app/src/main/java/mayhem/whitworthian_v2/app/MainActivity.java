@@ -23,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void run() {
                 final Intent mainIntent = new Intent(MainActivity.this, ArticleListActivity.class);
+                mainIntent.putExtra("this_Genre", "Top News");
                 MainActivity.this.startActivity(mainIntent);
                 MainActivity.this.finish();
             }

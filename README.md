@@ -2,5 +2,5 @@ This contains the necessary files to make the Whitworthian App run.  Note: packa
 
 Notes:
 
-Min SDK version: 12
+Min SDK version: 14
 Target SDK version: 19
