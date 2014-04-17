@@ -156,7 +156,9 @@ public class ArticleListActivity extends ActionBarActivity {
 
     public void load_Article_View(View view) {
         Intent article_View = new Intent(this, ArticleViewActivity.class);
-        startActivity(article_View);
+        article_View.putExtra("my_Genre", my_Genre);
+        startActivityForResult(article_View, 1);
+        //startActivity(article_View);
     }
 
     /**

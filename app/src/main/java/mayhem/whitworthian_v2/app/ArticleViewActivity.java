@@ -10,15 +10,56 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class ArticleViewActivity extends ActionBarActivity {
+    private String my_Genre;
+    private int my_Image;
+    private PlaceholderFragment my_Fragment = new PlaceholderFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_view);
 
+        Bundle goodies = getIntent().getExtras();
+
+        try{
+            my_Genre = goodies.getString("my_Genre");
+        }
+        catch(NullPointerException bad){
+            my_Genre = "Top News";
+        }
+
+        //Set up action bar Title
+        if (my_Genre.equals("Top News"))
+            setTitle("The Whitworthian");
+        else
+            setTitle(my_Genre);
+
+        //Set up action bar image
+        if (my_Genre.equals("News")){
+            my_Image = R.drawable.news_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else if (my_Genre.equals("Sports")){
+            my_Image = R.drawable.sports_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else if (my_Genre.equals("Arts & Culture")){
+            my_Image = R.drawable.ac_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else if (my_Genre.equals("Opinion")){
+            my_Image = R.drawable.opinions_box;
+            getActionBar().setIcon(my_Image);
+        }
+        else{
+            my_Image = R.drawable.whitworthian_w;
+            getActionBar().setIcon(my_Image);
+
+        }
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment()).commit();
+                    .add(R.id.container, my_Fragment).commit();
         }
     }
 
