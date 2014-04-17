@@ -35,3 +35,9 @@ _______________________________________________
 18. Open android studio and import project folder.
 19. Make sure you have android support repository installed in sdk manager (using C:\Android-SDK-Eclipse\SDK Manager)
 20. file-> project structure -> Android SDK in platform settings -> android sdk location: C:\Android-SDK-Eclipse\sdk
+21. Click on Modules under project settings
+22. Go to dependency tab
+23. Click "+"
+24. Search for "NavUtils"
+25. Select com.google.android:support-v4:r7@jar from dropdown menu
+26. Press ok
