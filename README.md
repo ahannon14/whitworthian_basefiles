@@ -37,7 +37,10 @@ _______________________________________________
 20. file-> project structure -> Android SDK in platform settings -> android sdk location: C:\Android-SDK-Eclipse\sdk
 21. Click on Modules under project settings
 22. Go to dependency tab
-23. Click "+"
+23. Click "+", choose maven dependency
 24. Search for "NavUtils"
 25. Select com.google.android:support-v4:r7@jar from dropdown menu
 26. Press ok
+27. Add another Maven dependency: com.android.support:appcompat-v7:+
+28. Sync project with gradle files
+-->>Some sort of error
