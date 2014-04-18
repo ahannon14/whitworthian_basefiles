@@ -1,5 +1,7 @@
 package mayhem.whitworthian_v2.app;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -10,17 +12,67 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class ArticleViewActivity extends ActionBarActivity {
+    /*The data of the article View, contains the following:
+        my_Genre        - The genre of the article, for the purposes of action bar display
+        my_Genre_Image  - The Image of the genre of the article, for action bar display
+        my_Image        - The image of the article, as retrieved from thewhitworthian.com
+        my_Title        - The title of the article, as retrieved from thewhitworthian.com
+        my_Body         - The Body of the article, as retrieved from thewhitworthian.com
+     */
     private String my_Genre;
+    private int my_Genre_Image;
     private int my_Image;
+    private String my_Title;
+    private String my_Body;
     private PlaceholderFragment my_Fragment = new PlaceholderFragment();
 
-    @Override
+    @Override  //Create the activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_view);
 
-        Bundle goodies = getIntent().getExtras();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, my_Fragment).commit();
+        }
 
+        //Puts article genre and genre image in action bar
+        setup_ActionBar_Appearance();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.article_view, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // when the back button is clicked, return to the article list we were just on
+                Intent data = new Intent();
+                data.putExtra("this_Genre", my_Genre);
+                setResult(RESULT_OK, data);
+                finish();
+                return true;
+            case mayhem.whitworthian_v2.app.R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //Puts article genre and genre image in action bar
+    private void setup_ActionBar_Appearance(){
+        Bundle goodies = getIntent().getExtras(); //Get extras from this intent
+
+        //Try to get the genre, if all else fails, set it as top news
         try{
             my_Genre = goodies.getString("my_Genre");
         }
@@ -36,58 +88,33 @@ public class ArticleViewActivity extends ActionBarActivity {
 
         //Set up action bar image
         if (my_Genre.equals("News")){
-            my_Image = R.drawable.news_box;
-            getActionBar().setIcon(my_Image);
+            my_Genre_Image = R.drawable.news_box;
+            getActionBar().setIcon(my_Genre_Image);
         }
         else if (my_Genre.equals("Sports")){
-            my_Image = R.drawable.sports_box;
-            getActionBar().setIcon(my_Image);
+            my_Genre_Image = R.drawable.sports_box;
+            getActionBar().setIcon(my_Genre_Image);
         }
         else if (my_Genre.equals("Arts & Culture")){
-            my_Image = R.drawable.ac_box;
-            getActionBar().setIcon(my_Image);
+            my_Genre_Image = R.drawable.ac_box;
+            getActionBar().setIcon(my_Genre_Image);
         }
         else if (my_Genre.equals("Opinion")){
-            my_Image = R.drawable.opinions_box;
-            getActionBar().setIcon(my_Image);
+            my_Genre_Image = R.drawable.opinions_box;
+            getActionBar().setIcon(my_Genre_Image);
         }
         else{
             my_Image = R.drawable.whitworthian_w;
-            getActionBar().setIcon(my_Image);
+            getActionBar().setIcon(my_Genre_Image);
 
         }
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, my_Fragment).commit();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.article_view, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-
+        //made public element for outside access
         public View rootView;
 
         public PlaceholderFragment() {

@@ -17,40 +17,20 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class ArticleListActivity extends ActionBarActivity {
+    /* Variables for ArticleListActivity
+        numArticles     -the number of articles to display
+        articles        -A string containing the titles of articles to display
+        article_List    -A ListView object which corresponds to the ListView in the activity
+        myfragment      -The ArticleList fragment where the action happens
+        my_Genre        -The genre of the articles displayed
+        my_Image        -The image corresponding to that genre.
+     */
     final int numArticles = 10;
     private String[] articles = new String[numArticles];
     private ListView article_List;
     private PlaceholderFragment myfragment = new PlaceholderFragment();
-    private ActionBar actionBar;
     private String my_Genre;
     private int my_Image;
-
-
-
-
-    protected void fill_Article_String() {
-
-        articles = getResources().getStringArray(mayhem.whitworthian_v2.app.R.array.article_Titles);
-    }
-
-    protected ListView get_Article_List(View V) {
-        if (article_List == null) {
-            article_List = (ListView) V.findViewById(mayhem.whitworthian_v2.app.R.id.article_List_View);
-        }
-        return article_List;
-    }
-
-    protected void set_Article_List_Adapter(View V) {
-        article_Selection article_Data[] = new article_Selection[numArticles];
-        for (int i = 0; i < numArticles; i++)
-        {
-            article_Data[i] = new article_Selection(my_Image, articles[i]);
-        }
-        get_Article_List(V);
-
-        article_Selection_Adapter adapter = new article_Selection_Adapter(this, article_Data);
-        get_Article_List(V).setAdapter(adapter);
-    }
 
 
     @Override
@@ -58,12 +38,96 @@ public class ArticleListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(mayhem.whitworthian_v2.app.R.layout.activity_article_list);
 
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(mayhem.whitworthian_v2.app.R.id.container, myfragment).commit();
         }
 
+        //Sets up the action bar and the genre of the article list
+        setup_ActionBar_Appearance();
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(mayhem.whitworthian_v2.app.R.menu.article_list, menu);
+
+        //Fills the article list with the appropriate articles
+        View V = myfragment.rootView;
+        fill_Article_String();
+        get_Article_List(V);
+        set_Article_List_Adapter(V);
+        //Waits for an article to be clicked on, then loads the appropriate view
+        article_List.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                load_Article_View(view);
+            }
+        });
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Go back to the genre list activity on back button click.
+                Intent myIntent = new Intent(this, GenreListActivity.class);
+                try {
+                    startActivity(myIntent);
+                } catch  ( ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            case mayhem.whitworthian_v2.app.R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //Fill in string array of article titles
+    protected void fill_Article_String() {
+        articles = getResources().getStringArray(mayhem.whitworthian_v2.app.R.array.article_Titles);
+    }
+
+    //finds the article list element for the program to fill it with article titles
+    protected ListView get_Article_List(View V) {
+        if (article_List == null) {
+            article_List = (ListView) V.findViewById(mayhem.whitworthian_v2.app.R.id.article_List_View);
+        }
+        return article_List;
+    }
+
+    //Create the article list adapter so that it can contain more complex elements than just the
+    // title.
+    protected void set_Article_List_Adapter(View V) {
+        //Makes an array of article selections (which can contain title, image id, and article id.
+        article_Selection article_Data[] = new article_Selection[numArticles];
+        for (int i = 0; i < numArticles; i++)
+        {
+            //Loads article data
+            article_Data[i] = new article_Selection(my_Image, articles[i]);
+        }
+        //Puts data into the article list
+        article_Selection_Adapter adapter = new article_Selection_Adapter(this, article_Data);
+        get_Article_List(V).setAdapter(adapter);
+    }
+
+    //loads the appropriate article upon selection.
+    public void load_Article_View(View view) {
+        Intent article_View = new Intent(this, ArticleViewActivity.class);
+        article_View.putExtra("my_Genre", my_Genre);
+        startActivityForResult(article_View, 1);
+    }
+
+    //Sets up the action bar and the genre of the article list
+    private void setup_ActionBar_Appearance(){
         Bundle goodies = getIntent().getExtras();
 
         try{
@@ -105,60 +169,7 @@ public class ArticleListActivity extends ActionBarActivity {
 
         ActionBar ab = getActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-    }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(mayhem.whitworthian_v2.app.R.menu.article_list, menu);
-
-        View V = myfragment.rootView;
-
-        fill_Article_String();
-        get_Article_List(V);
-        set_Article_List_Adapter(V);
-
-
-
-        article_List.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                load_Article_View(view);
-            }
-        });
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                Intent myIntent = new Intent(this, GenreListActivity.class);
-                try {
-                    startActivity(myIntent);
-                } catch  ( ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return true;
-            case mayhem.whitworthian_v2.app.R.id.action_settings:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void load_Article_View(View view) {
-        Intent article_View = new Intent(this, ArticleViewActivity.class);
-        article_View.putExtra("my_Genre", my_Genre);
-        startActivityForResult(article_View, 1);
-        //startActivity(article_View);
     }
 
     /**
