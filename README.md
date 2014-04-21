@@ -73,3 +73,7 @@ _______________________________________________
 <li>git commit -m "Message" </li>
 <li>git push origin master</li>
 </ol>
+
+______________________________________
+<p> To get files back down from GitHub, either follow the steps above in creation, or: </p>
+<p> git pull origin master </p>
