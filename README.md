@@ -63,3 +63,13 @@ _______________________________________________
 
 <li> Build and run! </li>
 </ol>
+_______________________________________________
+
+<h2>Steps to update files in GitHub</h2>
+_______________________________________________
+<ol>
+<li>git status</li>
+<li>git add *file* </li>
+<li>git commit -m "Message" </li>
+<li>git push origin master</li>
+</ol>
