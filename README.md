@@ -48,9 +48,9 @@ ________________________________________________________________________________
 </ol>
 _______________________________________________
 <ol>
-</li> Make sure you have android support repository installed in sdk manager (using C:\Android-SDK-Eclipse\SDK Manager) </li>
-</li> file-> project structure -> Android SDK in platform settings -> android sdk location: C:\Android-SDK-Eclipse\sdk </li>
-</li> <p> Ensure the following is in your dependencies block (at the bottom of build.gradle) </p>
+<li> Make sure you have android support repository installed in sdk manager (using C:\Android-SDK-Eclipse\SDK Manager) </li>
+<li> file-> project structure -> Android SDK in platform settings -> android sdk location: C:\Android-SDK-Eclipse\sdk </li>
+<li> <p> Ensure the following is in your dependencies block (at the bottom of build.gradle) </p>
 
 
 <p>dependencies { </p>
