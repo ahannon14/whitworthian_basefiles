@@ -38,6 +38,7 @@ _______________________________________________________
 <li>article_list_item_row </li>
 </ul>
 </li>
+</ol>
 _____________________________________________________________________________________
 <ol>
 <li> git init just inside of whitworthian_v2 folder(where you see app, build.gradle, etc.) </li>
