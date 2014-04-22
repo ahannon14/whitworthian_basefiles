@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import java.util.Vector;
+
 public class ArticleListActivity extends ActionBarActivity {
     /* Variables for ArticleListActivity
         numArticles     -the number of articles to display
@@ -31,6 +33,8 @@ public class ArticleListActivity extends ActionBarActivity {
     private PlaceholderFragment myfragment = new PlaceholderFragment();
     private String my_Genre;
     private int my_Image;
+
+    private Vector<article> app_Articles;
 
 
     @Override
