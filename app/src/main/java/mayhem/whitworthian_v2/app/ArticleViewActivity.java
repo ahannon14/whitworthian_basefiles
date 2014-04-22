@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class ArticleViewActivity extends ActionBarActivity {
     /*The data of the article View, contains the following:
         my_Genre        - The genre of the article, for the purposes of action bar display
@@ -25,6 +28,7 @@ public class ArticleViewActivity extends ActionBarActivity {
     private String my_Title;
     private String my_Body;
     private PlaceholderFragment my_Fragment = new PlaceholderFragment();
+    private ArrayList<article> app_Articles;
 
     @Override  //Create the activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,7 @@ public class ArticleViewActivity extends ActionBarActivity {
 
         //Puts article genre and genre image in action bar
         setup_ActionBar_Appearance();
+        get_Article_Data();
     }
 
 
@@ -58,6 +63,7 @@ public class ArticleViewActivity extends ActionBarActivity {
                 // when the back button is clicked, return to the article list we were just on
                 Intent data = new Intent();
                 data.putExtra("this_Genre", my_Genre);
+                data.putParcelableArrayListExtra("my_Articles", app_Articles);
                 setResult(RESULT_OK, data);
                 finish();
                 return true;
@@ -65,6 +71,17 @@ public class ArticleViewActivity extends ActionBarActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected void get_Article_Data() {
+        Bundle goodies = getIntent().getExtras();
+
+        try{
+            this.app_Articles = goodies.getParcelableArrayList("my_Articles");
+        }
+        catch(NullPointerException bad){
+            this.app_Articles = new ArrayList<article>();
         }
     }
 

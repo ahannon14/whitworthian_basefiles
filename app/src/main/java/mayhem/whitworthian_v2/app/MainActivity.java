@@ -104,13 +104,13 @@ public class MainActivity extends ActionBarActivity {
         local_Articles.add(new article("News Item 1", "This is the body of this article", "News", true, false));
         local_Articles.add(new article("News Item 2", "This is the body of this article", "News", false, false));
         local_Articles.add(new article("News Item 3", "This is the body of this article", "News", true, false));
-        local_Articles.add(new article("Sports Item 1", "This is the body of this article", "News", false, false));
-        local_Articles.add(new article("Sports Item 2", "This is the body of this article", "News", true, false));
-        local_Articles.add(new article("Sports Item 3", "This is the body of this article", "News", true, false));
-        local_Articles.add(new article("Opinion Item 1", "This is the body of this article", "News", true, false));
-        local_Articles.add(new article("Opinion Item 2", "This is the body of this article", "News", false, false));
-        local_Articles.add(new article("A&C Item 1", "This is the body of this article", "News", false, false));
-        local_Articles.add(new article("A&C Item 2", "This is the body of this article", "News", true, false));
+        local_Articles.add(new article("Sports Item 1", "This is the body of this article", "Sports", false, false));
+        local_Articles.add(new article("Sports Item 2", "This is the body of this article", "Sports", true, false));
+        local_Articles.add(new article("Sports Item 3", "This is the body of this article", "Sports", true, false));
+        local_Articles.add(new article("Opinion Item 1", "This is the body of this article", "Opinion", true, false));
+        local_Articles.add(new article("Opinion Item 2", "This is the body of this article", "Opinion", false, false));
+        local_Articles.add(new article("A&C Item 1", "This is the body of this article", "Arts & Culture", false, false));
+        local_Articles.add(new article("A&C Item 2", "This is the body of this article", "Arts & Culture", true, false));
 
         return local_Articles;
 

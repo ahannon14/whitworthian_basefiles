@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class ArticleListActivity extends ActionBarActivity {
@@ -27,14 +28,15 @@ public class ArticleListActivity extends ActionBarActivity {
         my_Genre        -The genre of the articles displayed
         my_Image        -The image corresponding to that genre.
      */
-    final int numArticles = 10;
-    private String[] articles = new String[numArticles];
+    private int numArticles;
+    private String[] articles;
+    private int[] images;
     private ListView article_List;
     private PlaceholderFragment myfragment = new PlaceholderFragment();
     private String my_Genre;
     private int my_Image;
 
-    private Vector<article> app_Articles;
+    private ArrayList<article> app_Articles;
 
 
     @Override
@@ -49,6 +51,7 @@ public class ArticleListActivity extends ActionBarActivity {
 
         //Sets up the action bar and the genre of the article list
         setup_ActionBar_Appearance();
+        get_Article_Data();
 
     }
 
@@ -82,6 +85,8 @@ public class ArticleListActivity extends ActionBarActivity {
             case android.R.id.home:
                 // Go back to the genre list activity on back button click.
                 Intent myIntent = new Intent(this, GenreListActivity.class);
+
+                myIntent.putParcelableArrayListExtra("my_Articles", app_Articles);
                 try {
                     startActivity(myIntent);
                 } catch  ( ActivityNotFoundException e) {
@@ -95,9 +100,61 @@ public class ArticleListActivity extends ActionBarActivity {
         }
     }
 
+    protected void get_Article_Data() {
+        Bundle goodies = getIntent().getExtras();
+
+        try{
+            this.app_Articles = goodies.getParcelableArrayList("my_Articles");
+        }
+        catch(NullPointerException bad){
+            this.app_Articles = new ArrayList<article>();
+        }
+
+
+    }
+
     //Fill in string array of article titles
     protected void fill_Article_String() {
-        articles = getResources().getStringArray(mayhem.whitworthian_v2.app.R.array.article_Titles);
+        if (!(my_Genre.equals("Top News"))){
+            for (int i = 0; i < app_Articles.size(); i++) {
+                if (app_Articles.get(i).get_Genre().equals(my_Genre))
+                {
+                    numArticles++;
+                }
+            }
+        }
+        else {
+            for (int i = 0; i < app_Articles.size(); i++) {
+                if (app_Articles.get(i).is_Top())
+                {
+                    numArticles++;
+                }
+            }
+        }
+        articles = new String[numArticles];
+        images = new int[numArticles];
+
+        int counter = 0;
+        if (!(my_Genre.equals("Top News"))){
+            for (int i = 0; i < app_Articles.size(); i++) {
+                if (app_Articles.get(i).get_Genre().equals(my_Genre))
+                {
+                    articles[counter] = app_Articles.get(i).get_Title();
+                    images[counter] = app_Articles.get(i).get_image_ID();
+                    counter++;
+                }
+            }
+        }
+        else {
+            for (int i = 0; i < app_Articles.size(); i++) {
+                if (app_Articles.get(i).is_Top())
+                {
+                    articles[counter] = app_Articles.get(i).get_Title();
+                    images[counter] = app_Articles.get(i).get_image_ID();
+                    counter++;
+                }
+            }
+        }
     }
 
     //finds the article list element for the program to fill it with article titles
@@ -116,7 +173,7 @@ public class ArticleListActivity extends ActionBarActivity {
         for (int i = 0; i < numArticles; i++)
         {
             //Loads article data
-            article_Data[i] = new article_Selection(my_Image, articles[i]);
+            article_Data[i] = new article_Selection(images[i], articles[i]);
         }
         //Puts data into the article list
         article_Selection_Adapter adapter = new article_Selection_Adapter(this, article_Data);
@@ -127,6 +184,7 @@ public class ArticleListActivity extends ActionBarActivity {
     public void load_Article_View(View view) {
         Intent article_View = new Intent(this, ArticleViewActivity.class);
         article_View.putExtra("my_Genre", my_Genre);
+        article_View.putParcelableArrayListExtra("my_Articles", app_Articles);
         startActivityForResult(article_View, 1);
     }
 
@@ -135,6 +193,7 @@ public class ArticleListActivity extends ActionBarActivity {
         Bundle goodies = getIntent().getExtras();
 
         try{
+            ArrayList<article> local_Articles = goodies.getParcelableArrayList("my_Articles");
             my_Genre = goodies.getString("this_Genre");
         }
         catch(NullPointerException bad){

@@ -14,6 +14,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class GenreListActivity extends ActionBarActivity {
     /* Create class variables:
         numGenres       - the total number of news genres, including top news
@@ -25,6 +27,7 @@ public class GenreListActivity extends ActionBarActivity {
     private String[] genres = new String[numGenres];
     private ListView genre_List;
     private PlaceholderFragment myGenrefragment = new PlaceholderFragment();
+    private ArrayList<article> app_Articles;
 
     @Override  //Create the activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class GenreListActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, myGenrefragment).commit();
         }
+
+        get_Article_Data();
     }
 
     @Override //set up the options menu and store data in the appropriate fragment
@@ -100,9 +105,22 @@ public class GenreListActivity extends ActionBarActivity {
     public void genre_Item_Click(View view, String new_Genre) {
         Intent article_List = new Intent(this, ArticleListActivity.class);
         article_List.putExtra("this_Genre", new_Genre);
+        article_List.putParcelableArrayListExtra("my_Articles", app_Articles);
         startActivity(article_List);
     }
 
+    protected void get_Article_Data() {
+        Bundle goodies = getIntent().getExtras();
+
+        try{
+            this.app_Articles = goodies.getParcelableArrayList("my_Articles");
+        }
+        catch(NullPointerException bad){
+            this.app_Articles = new ArrayList<article>();
+        }
+
+
+    }
 
 
     /**
