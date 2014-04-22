@@ -7,6 +7,7 @@ import android.os.Parcelable;
  * Created by Evan Anders on 4/21/14.
  */
 public class article implements Parcelable {
+    private int article_ID;
     private String title;
     private String body;
     private String genre;
@@ -15,16 +16,18 @@ public class article implements Parcelable {
     private int image_ID;
     private String image_URL;
 
+
     public int describeContents() {
         return 0;
     }
 
     public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(article_ID);
         out.writeString(title);
         out.writeString(body);
         out.writeString(genre);
         out.writeByte((byte) (is_Top ? 1: 0));
-        out.writeByte((byte) (has_Image ? 1: 0));
+        out.writeByte((byte) (has_Image ? 1 : 0));
         out.writeInt(image_ID);
         out.writeString(image_URL);
 
@@ -42,17 +45,19 @@ public class article implements Parcelable {
     };
 
     private article(Parcel in) {
+        article_ID = in.readInt();
         title = in.readString();
         body = in.readString();
         genre = in.readString();
         is_Top = in.readByte() != 0;
         has_Image = in.readByte() != 0;
         image_ID = in.readInt();
-        image_URL = in.readString();
+        image_URL = in.readString(); 
     }
 
-    public article(String title, String body, String genre, Boolean is_Top, Boolean has_Image,
+    public article(int article_ID, String title, String body, String genre, Boolean is_Top, Boolean has_Image,
                     String image_URL){
+        this.article_ID = article_ID;
         this.title = title;
         this.body = body;
         this.genre = genre;
@@ -85,7 +90,8 @@ public class article implements Parcelable {
         }
     }
 
-    public article(String title, String body, String genre, Boolean is_Top, Boolean has_Image){
+    public article(int article_ID, String title, String body, String genre, Boolean is_Top, Boolean has_Image){
+        this.article_ID = article_ID;
         this.title = title;
         this.body = body;
         this.genre = genre;
@@ -119,6 +125,7 @@ public class article implements Parcelable {
     }
 
     /* Accessors */
+    public int get_Article_ID() { return this.article_ID; }
     public String get_Title(){
         return this.title;
     }
@@ -128,9 +135,7 @@ public class article implements Parcelable {
     public String get_Genre(){
         return this.genre;
     }
-    public Boolean is_Top(){
-        return is_Top;
-    }
+    public Boolean is_Top(){return is_Top;}
     public Boolean get_Has_Image(){
         return has_Image;
     }

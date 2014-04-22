@@ -31,6 +31,7 @@ public class ArticleListActivity extends ActionBarActivity {
     private int numArticles;
     private String[] articles;
     private int[] images;
+    private int[] ids;
     private ListView article_List;
     private PlaceholderFragment myfragment = new PlaceholderFragment();
     private String my_Genre;
@@ -69,7 +70,7 @@ public class ArticleListActivity extends ActionBarActivity {
         //Waits for an article to be clicked on, then loads the appropriate view
         article_List.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                load_Article_View(view);
+                load_Article_View(view, position);
             }
         });
         return true;
@@ -133,6 +134,7 @@ public class ArticleListActivity extends ActionBarActivity {
         }
         articles = new String[numArticles];
         images = new int[numArticles];
+        ids = new int[numArticles];
 
         int counter = 0;
         if (!(my_Genre.equals("Top News"))){
@@ -141,6 +143,7 @@ public class ArticleListActivity extends ActionBarActivity {
                 {
                     articles[counter] = app_Articles.get(i).get_Title();
                     images[counter] = app_Articles.get(i).get_image_ID();
+                    ids[counter] = app_Articles.get(i).get_Article_ID();
                     counter++;
                 }
             }
@@ -151,6 +154,7 @@ public class ArticleListActivity extends ActionBarActivity {
                 {
                     articles[counter] = app_Articles.get(i).get_Title();
                     images[counter] = app_Articles.get(i).get_image_ID();
+                    ids[counter] = app_Articles.get(i).get_Article_ID();
                     counter++;
                 }
             }
@@ -181,9 +185,10 @@ public class ArticleListActivity extends ActionBarActivity {
     }
 
     //loads the appropriate article upon selection.
-    public void load_Article_View(View view) {
+    public void load_Article_View(View view, int position) {
         Intent article_View = new Intent(this, ArticleViewActivity.class);
         article_View.putExtra("my_Genre", my_Genre);
+        article_View.putExtra("my_ID", ids[position]);
         article_View.putParcelableArrayListExtra("my_Articles", app_Articles);
         startActivityForResult(article_View, 1);
     }

@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -24,7 +26,9 @@ public class ArticleViewActivity extends ActionBarActivity {
      */
     private String my_Genre;
     private int my_Genre_Image;
-    private int my_Image;
+    private int my_ID;
+    private int my_Image_ID;
+    private String my_Image_URL;
     private String my_Title;
     private String my_Body;
     private PlaceholderFragment my_Fragment = new PlaceholderFragment();
@@ -42,6 +46,13 @@ public class ArticleViewActivity extends ActionBarActivity {
 
         //Puts article genre and genre image in action bar
         setup_ActionBar_Appearance();
+        Bundle goodies = getIntent().getExtras(); //Get extras from this intent
+        try{
+            this.my_ID = goodies.getInt("my_ID");
+        }
+        catch(NullPointerException bad){
+            this.my_ID = -1;
+        }
         get_Article_Data();
     }
 
@@ -50,6 +61,28 @@ public class ArticleViewActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.article_view, menu);
+
+        View V = my_Fragment.getView();
+
+        //Set the Title
+        final TextView title_Text = (TextView) V.findViewById(R.id.article_title);
+        title_Text.setText(my_Title);
+
+        //Set the Body
+        final TextView body_Text = (TextView) V.findViewById(R.id.article_content);
+        body_Text.setText(my_Body);
+
+        //Set the Image -- NOTE: THIS ISN'T WORKING
+
+        if (my_Image_URL != null) {
+            ///Set the image using the url
+        }
+        else {
+            final ImageView image_Box = (ImageView) V.findViewById(R.id.article_image);
+            image_Box.setBackgroundResource(R.drawable.whitworthian_w);
+        }
+
+
         return true;
     }
 
@@ -83,6 +116,16 @@ public class ArticleViewActivity extends ActionBarActivity {
         catch(NullPointerException bad){
             this.app_Articles = new ArrayList<article>();
         }
+
+        for (int i = 0; i < this.app_Articles.size(); i++) {
+            if (this.app_Articles.get(i).get_Article_ID() == my_ID) {
+                my_Body = this.app_Articles.get(i).get_Body();
+                my_Title = this.app_Articles.get(i).get_Title();
+                my_Image_URL = this.app_Articles.get(i).get_image_URL();
+                my_Image_ID = this.app_Articles.get(i).get_image_ID();
+            }
+        }
+
     }
 
     //Puts article genre and genre image in action bar

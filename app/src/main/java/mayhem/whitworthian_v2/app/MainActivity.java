@@ -101,16 +101,16 @@ public class MainActivity extends ActionBarActivity {
     {
         ArrayList<article> local_Articles = new ArrayList<article>();
 
-        local_Articles.add(new article("News Item 1", "This is the body of this article", "News", true, false));
-        local_Articles.add(new article("News Item 2", "This is the body of this article", "News", false, false));
-        local_Articles.add(new article("News Item 3", "This is the body of this article", "News", true, false));
-        local_Articles.add(new article("Sports Item 1", "This is the body of this article", "Sports", false, false));
-        local_Articles.add(new article("Sports Item 2", "This is the body of this article", "Sports", true, false));
-        local_Articles.add(new article("Sports Item 3", "This is the body of this article", "Sports", true, false));
-        local_Articles.add(new article("Opinion Item 1", "This is the body of this article", "Opinion", true, false));
-        local_Articles.add(new article("Opinion Item 2", "This is the body of this article", "Opinion", false, false));
-        local_Articles.add(new article("A&C Item 1", "This is the body of this article", "Arts & Culture", false, false));
-        local_Articles.add(new article("A&C Item 2", "This is the body of this article", "Arts & Culture", true, false));
+        local_Articles.add(new article(1, "News Item 1", "This is the body of the article: News 1", "News", true, false));
+        local_Articles.add(new article(2, "News Item 2", "This is the body of the article: News 2", "News", false, false));
+        local_Articles.add(new article(3, "News Item 3", "This is the body of the article: News 3", "News", true, false));
+        local_Articles.add(new article(4, "Sports Item 1", "This is the body of the article: Sports 1", "Sports", false, false));
+        local_Articles.add(new article(5, "Sports Item 2", "This is the body of the article: Sports 2", "Sports", true, false));
+        local_Articles.add(new article(6, "Sports Item 3", "This is the body of the article: Sports 3", "Sports", true, false));
+        local_Articles.add(new article(7, "Opinion Item 1", "This is the body of the article: Opinion 1", "Opinion", true, false));
+        local_Articles.add(new article(8, "Opinion Item 2", "This is the body of the article: Opinion 2", "Opinion", false, false));
+        local_Articles.add(new article(9, "A&C Item 1", "This is the body of the article: Arts & Culture 1", "Arts & Culture", false, false));
+        local_Articles.add(new article(10, "A&C Item 2", "This is the body of the article: Arts & Culture 2", "Arts & Culture", true, false));
 
         return local_Articles;
 
