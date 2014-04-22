@@ -79,7 +79,23 @@ public class ArticleViewActivity extends ActionBarActivity {
         }
         else {
             final ImageView image_Box = (ImageView) V.findViewById(R.id.article_image);
-            image_Box.setBackgroundResource(R.drawable.whitworthian_w);
+            if (my_Image_URL == null)
+            {
+                if (my_Image_ID == R.drawable.news_box){
+                    image_Box.setImageResource(R.drawable.news_bar);
+                }
+                else if (my_Image_ID == R.drawable.opinions_box) {
+                    image_Box.setImageResource(R.drawable.opinions_bar);
+                }
+                else if (my_Image_ID == R.drawable.ac_box) {
+                    image_Box.setImageResource(R.drawable.ac_bar);
+                }
+                else if (my_Image_ID == R.drawable.sports_box) {
+                    image_Box.setImageResource(R.drawable.sports_bar);
+                }
+
+
+            }
         }
 
 
