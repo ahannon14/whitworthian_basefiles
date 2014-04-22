@@ -1,4 +1,4 @@
-import mayhem.whitworthian_v2.app.R;
+package mayhem.whitworthian_v2.app;
 
 /**
  * Created by Evan Anders on 4/21/14.
