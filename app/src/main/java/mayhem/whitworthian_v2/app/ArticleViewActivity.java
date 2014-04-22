@@ -121,7 +121,7 @@ public class ArticleViewActivity extends ActionBarActivity {
             getActionBar().setIcon(my_Genre_Image);
         }
         else{
-            my_Image = R.drawable.whitworthian_w;
+            my_Genre_Image = R.drawable.whitworthian_w;
             getActionBar().setIcon(my_Genre_Image);
 
         }
