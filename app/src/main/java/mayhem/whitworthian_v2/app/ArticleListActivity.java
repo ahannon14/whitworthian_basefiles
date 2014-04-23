@@ -36,6 +36,7 @@ public class ArticleListActivity extends ActionBarActivity {
     private PlaceholderFragment myfragment = new PlaceholderFragment();
     private String my_Genre;
     private int my_Image;
+    private boolean my_Instance;
 
     private ArrayList<article> app_Articles;
 
@@ -85,13 +86,21 @@ public class ArticleListActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Go back to the genre list activity on back button click.
-                Intent myIntent = new Intent(this, GenreListActivity.class);
+                if(my_Instance){
+                    Intent myIntent = new Intent(this, GenreListActivity.class);
 
-                myIntent.putParcelableArrayListExtra("my_Articles", app_Articles);
-                try {
-                    startActivity(myIntent);
-                } catch  ( ActivityNotFoundException e) {
-                    e.printStackTrace();
+                    myIntent.putParcelableArrayListExtra("my_Articles", app_Articles);
+                    try {
+                        startActivity(myIntent);
+                    } catch (ActivityNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    Intent data = new Intent();
+                    data.putParcelableArrayListExtra("my_Articles", app_Articles);
+                    setResult(RESULT_OK, data);
+                    finish();
                 }
                 return true;
             case mayhem.whitworthian_v2.app.R.id.action_settings:
@@ -109,6 +118,13 @@ public class ArticleListActivity extends ActionBarActivity {
         }
         catch(NullPointerException bad){
             this.app_Articles = new ArrayList<article>();
+        }
+
+        try{
+            this.my_Instance = goodies.getBoolean("first_Instance");
+        }
+        catch(NullPointerException bad){
+            this.my_Instance = false;
         }
 
 
@@ -190,6 +206,7 @@ public class ArticleListActivity extends ActionBarActivity {
         article_View.putExtra("my_Genre", my_Genre);
         article_View.putExtra("my_ID", ids[position]);
         article_View.putParcelableArrayListExtra("my_Articles", app_Articles);
+        article_View.putExtra("first_Instance", this.my_Instance);
         startActivityForResult(article_View, 1);
     }
 

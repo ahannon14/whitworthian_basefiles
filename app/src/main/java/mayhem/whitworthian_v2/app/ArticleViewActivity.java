@@ -33,6 +33,7 @@ public class ArticleViewActivity extends ActionBarActivity {
     private String my_Body;
     private PlaceholderFragment my_Fragment = new PlaceholderFragment();
     private ArrayList<article> app_Articles;
+    private boolean list_Instance;
 
     @Override  //Create the activity
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,12 @@ public class ArticleViewActivity extends ActionBarActivity {
         }
         catch(NullPointerException bad){
             this.my_ID = -1;
+        }
+        try{
+            this.list_Instance = goodies.getBoolean("first_Instance");
+        }
+        catch(NullPointerException bad){
+            this.list_Instance = false;
         }
         get_Article_Data();
     }
@@ -93,8 +100,6 @@ public class ArticleViewActivity extends ActionBarActivity {
                 else if (my_Image_ID == R.drawable.sports_box) {
                     image_Box.setImageResource(R.drawable.sports_bar);
                 }
-
-
             }
         }
 
@@ -113,6 +118,7 @@ public class ArticleViewActivity extends ActionBarActivity {
                 Intent data = new Intent();
                 data.putExtra("this_Genre", my_Genre);
                 data.putParcelableArrayListExtra("my_Articles", app_Articles);
+                data.putExtra("first_Instance", list_Instance);
                 setResult(RESULT_OK, data);
                 finish();
                 return true;

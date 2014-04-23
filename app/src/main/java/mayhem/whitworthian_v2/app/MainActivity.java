@@ -89,6 +89,7 @@ public class MainActivity extends ActionBarActivity {
             Intent article_List = new Intent(MainActivity.this, ArticleListActivity.class);
             article_List.putExtra("this_Genre", "Top News");
             article_List.putParcelableArrayListExtra("my_Articles", app_Articles);
+            article_List.putExtra("first_Instance", true);
             startActivity(article_List);
 
             // close this activity

@@ -29,6 +29,7 @@ public class GenreListActivity extends ActionBarActivity {
     private PlaceholderFragment myGenrefragment = new PlaceholderFragment();
     private ArrayList<article> app_Articles;
 
+
     @Override  //Create the activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +107,8 @@ public class GenreListActivity extends ActionBarActivity {
         Intent article_List = new Intent(this, ArticleListActivity.class);
         article_List.putExtra("this_Genre", new_Genre);
         article_List.putParcelableArrayListExtra("my_Articles", app_Articles);
-        startActivity(article_List);
+        article_List.putExtra("first_Instance", false);
+        startActivityForResult(article_List, 1);
     }
 
     protected void get_Article_Data() {
