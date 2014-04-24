@@ -55,6 +55,17 @@ public class article implements Parcelable {
         image_URL = in.readString(); 
     }
 
+    public article(){
+        int article_ID = 0;
+        String title = "";
+        String body = "";
+        String genre = "";
+        Boolean is_Top = false;
+        Boolean has_Image = false;
+        int image_ID = 0;
+        String image_URL = null;
+    }
+
     public article(int article_ID, String title, String body, String genre, Boolean is_Top, Boolean has_Image,
                     String image_URL){
         this.article_ID = article_ID;
@@ -82,7 +93,7 @@ public class article implements Parcelable {
         else if (this.genre.equals("Arts & Culture")){
             this.image_ID = R.drawable.ac_box;
         }
-        else if (this.genre.equals("Opinion")){
+        else if (this.genre.equals("Opinions")){
             this.image_ID = R.drawable.opinions_box;
         }
         else{
@@ -116,13 +127,14 @@ public class article implements Parcelable {
         else if (this.genre.equals("Arts & Culture")){
             this.image_ID = R.drawable.ac_box;
         }
-        else if (this.genre.equals("Opinion")){
+        else if (this.genre.equals("Opinions")){
             this.image_ID = R.drawable.opinions_box;
         }
         else{
             this.image_ID = R.drawable.whitworthian_w;
         }
     }
+
 
     /* Accessors */
     public int get_Article_ID() { return this.article_ID; }
@@ -145,6 +157,32 @@ public class article implements Parcelable {
     public String get_image_URL(){
         return image_URL;
     }
+
+    /* Setters */
+    public void set_Article_ID(int id) {this.article_ID = id;}
+    public void set_Article_Title(String title) {this.title = title;}
+    public void set_Article_Body(String body) {this.body = body;}
+    public void set_Article_Genre(String genre) {
+        this.genre = genre;
+        //Set up default image
+        if (this.genre.equals("News")){
+            this.image_ID = R.drawable.news_box;
+        }
+        else if (this.genre.equals("Sports")){
+            this.image_ID = R.drawable.sports_box;
+        }
+        else if (this.genre.equals("Arts & Culture")){
+            this.image_ID = R.drawable.ac_box;
+        }
+        else if (this.genre.equals("Opinions")){
+            this.image_ID = R.drawable.opinions_box;
+        }
+        else{
+            this.image_ID = R.drawable.whitworthian_w;
+        }}
+    public void set_Article_Is_Top(boolean is_Top) {this.is_Top = is_Top;}
+    public void set_Article_Has_Image(boolean has_Image) {this.has_Image = has_Image;}
+    public void set_image_URL(String image_URL) {this.image_URL = image_URL;}
 
 
 

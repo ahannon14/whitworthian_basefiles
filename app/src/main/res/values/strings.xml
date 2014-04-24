@@ -14,7 +14,7 @@
         <item>News</item>
         <item>Sports</item>
         <item>Arts &amp; Culture</item>
-        <item>Opinion</item>
+        <item>Opinions</item>
     </string-array>
 
     <string name="title_Activity_Article_View">ArticleViewActivity</string>

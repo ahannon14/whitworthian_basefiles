@@ -241,7 +241,7 @@ public class ArticleListActivity extends ActionBarActivity {
             my_Image = R.drawable.ac_box;
             getActionBar().setIcon(my_Image);
         }
-        else if (my_Genre.equals("Opinion")){
+        else if (my_Genre.equals("Opinions")){
             my_Image = R.drawable.opinions_box;
             getActionBar().setIcon(my_Image);
         }

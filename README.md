@@ -26,6 +26,7 @@ _______________________________________________________
 <li><p>Create the following java classes:</p>
 
 <ul>
+<li>Rss_Handler</li>
 <li>article_Selection </li>
 <li>article_Selection_Adapter </li>
 <li>article </li>
