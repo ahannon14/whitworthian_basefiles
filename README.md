@@ -40,6 +40,13 @@ _______________________________________________________
 <li>article_list_item_row </li>
 </ul>
 </li>
+
+<li><p>Create the following directory under "res" directory: xml.  Add the following files to that directory</p>
+
+<ul>
+<li>searchable.xml </li>
+</ul>
+</li>
 </ol>
 _____________________________________________________________________________________
 <ol>
