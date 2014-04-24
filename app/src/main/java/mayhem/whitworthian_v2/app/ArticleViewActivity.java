@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +32,7 @@ public class ArticleViewActivity extends ActionBarActivity {
     private int my_Image_ID;
     private String my_Image_URL;
     private String my_Title;
-    private String my_Body;
+    private Spanned my_Body;
     private PlaceholderFragment my_Fragment = new PlaceholderFragment();
     private ArrayList<article> app_Articles;
     private boolean list_Instance;
@@ -141,7 +143,8 @@ public class ArticleViewActivity extends ActionBarActivity {
 
         for (int i = 0; i < this.app_Articles.size(); i++) {
             if (this.app_Articles.get(i).get_Article_ID() == my_ID) {
-                my_Body = this.app_Articles.get(i).get_Body();
+                String article_Body = this.app_Articles.get(i).get_Body();
+                my_Body = Html.fromHtml(article_Body);
                 my_Title = this.app_Articles.get(i).get_Title();
                 my_Image_URL = this.app_Articles.get(i).get_image_URL();
                 my_Image_ID = this.app_Articles.get(i).get_image_ID();
