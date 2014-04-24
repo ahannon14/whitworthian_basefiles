@@ -1,9 +1,9 @@
 package mayhem.whitworthian_v2.app;
 
+import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +52,20 @@ public class GenreListActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.genre_list, menu);
 
+        /*
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if(null!=searchManager ) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
+
+        */
+
+
         //Fills the genre view fragment
         View V = myGenrefragment.rootView;
         fill_Genre_String();
@@ -78,6 +92,9 @@ public class GenreListActivity extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if (id == R.id.action_search) {
+            onSearchRequested();
         }
         return super.onOptionsItemSelected(item);
     }

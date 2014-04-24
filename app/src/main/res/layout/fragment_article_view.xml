@@ -11,7 +11,7 @@
 
         <ImageView
             android:id="@+id/article_image"
-            android:src="@drawable/article_image"
+            android:src="@drawable/news_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="tempImage" />
@@ -20,10 +20,13 @@
             android:id="@+id/article_title"
             android:text="@string/test_Title"
             android:textSize="30sp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
             android:layout_below="@id/article_image"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40px"/>
 
         <TextView
             android:id="@+id/article_content"
