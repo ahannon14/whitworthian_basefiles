@@ -22,10 +22,11 @@ public class article_Selection {
     }
 
     /* Constructor for article_Selection when information is available */
-    public article_Selection(int icon, String title, int id){
+    public article_Selection(int icon, String title, String desc, int id){
         super();
         this.icon = icon;
         this.title = title;
+        this.desc = desc;
         this.id = id;
     }
 

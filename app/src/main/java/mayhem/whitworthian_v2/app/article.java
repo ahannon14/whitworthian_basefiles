@@ -5,19 +5,21 @@ import android.os.Parcelable;
 
 /**
  * Primary class for handling article data.  Contains the following elements:
- *  article_ID: used by application to easily distinguish articles
- *  title: the title of the article
- *  body: the full body text of the article
- *  genre: the genre of the article
- *  is_Top: a boolean determining whether or not the article is Top News
- *  has_Image: a boolean determining whether or not the article has an image link
- *  image_ID: default image ID based on genre
- *  image_URL: if has_Image is true, the URL of this article's image.
+ *  article_ID:         used by application to easily distinguish articles
+ *  title:              the title of the article
+ *  body:               the full body text of the article
+ *  desc:               the description of the article
+ *  genre:              the genre of the article
+ *  is_Top:             a boolean determining whether or not the article is Top News
+ *  has_Image:          a boolean determining whether or not the article has an image link
+ *  image_ID:           default image ID based on genre
+ *  image_URL:          if has_Image is true, the URL of this article's image.
  */
 public class article implements Parcelable {
     private int article_ID;
     private String title;
     private String body;
+    private String desc;
     private String genre;
     private Boolean is_Top;
     private Boolean has_Image;
@@ -42,6 +44,7 @@ public class article implements Parcelable {
         out.writeInt(article_ID);
         out.writeString(title);
         out.writeString(body);
+        out.writeString(desc);
         out.writeString(genre);
         out.writeByte((byte) (is_Top ? 1: 0));
         out.writeByte((byte) (has_Image ? 1 : 0));
@@ -57,6 +60,7 @@ public class article implements Parcelable {
         article_ID = in.readInt();
         title = in.readString();
         body = in.readString();
+        desc = in.readString();
         genre = in.readString();
         is_Top = in.readByte() != 0;
         has_Image = in.readByte() != 0;
@@ -82,22 +86,24 @@ public class article implements Parcelable {
 
     /* Default constructor.     */
     public article(){
-        int article_ID = 0;
-        String title = "";
-        String body = "";
-        String genre = "";
-        Boolean is_Top = false;
-        Boolean has_Image = false;
-        int image_ID = 0;
-        String image_URL = null;
+        this.article_ID = 0;
+        this.title = "";
+        this.body = "";
+        this.desc = "";
+        this.genre = "";
+        this.is_Top = false;
+        this.has_Image = false;
+        this.image_ID = 0;
+        this.image_URL = null;
     }
 
     /* Constructor for articles which DO have image URLs */
-    public article(int article_ID, String title, String body, String genre, Boolean is_Top, Boolean has_Image,
-                    String image_URL){
+    public article(int article_ID, String title, String body, String desc, String genre, Boolean is_Top,
+                   Boolean has_Image, String image_URL){
         this.article_ID = article_ID;
         this.title = title;
         this.body = body;
+        this.desc = desc;
         this.genre = genre;
         this.is_Top = is_Top;
         this.has_Image = has_Image;
@@ -129,10 +135,12 @@ public class article implements Parcelable {
     }
 
     /* Constructor for articles which DO NOT have image URLs */
-    public article(int article_ID, String title, String body, String genre, Boolean is_Top, Boolean has_Image){
+    public article(int article_ID, String title, String body, String desc, String genre,
+                   Boolean is_Top, Boolean has_Image){
         this.article_ID = article_ID;
         this.title = title;
         this.body = body;
+        this.desc = desc;
         this.genre = genre;
         this.is_Top = is_Top;
         this.has_Image = has_Image;
@@ -172,6 +180,7 @@ public class article implements Parcelable {
     public String get_Body(){
         return this.body;
     }
+    public String get_Desc() { return this.desc; }
     public String get_Genre(){
         return this.genre;
     }
@@ -190,6 +199,7 @@ public class article implements Parcelable {
     public void set_Article_ID(int id) {this.article_ID = id;}
     public void set_Article_Title(String title) {this.title = title;}
     public void set_Article_Body(String body) {this.body = body;}
+    public void set_Article_Desc(String desc) { this.desc = desc; }
     public void set_Article_Genre(String genre) {
         this.genre = genre;
         //Set up default image

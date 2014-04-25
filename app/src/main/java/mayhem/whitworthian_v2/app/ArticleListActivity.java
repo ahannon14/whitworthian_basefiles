@@ -26,8 +26,9 @@ import java.util.Vector;
  *  -Responds to user input by either opening an article, returning to genre page, or searching.
  *
  *  Contains the following class variables:
- *      numArticles     -the number of articles to display
- *      articles        -A string containing the titles of articles to display
+ *      num_Articles    -the number of articles to display
+ *      articles        -A string array containing the titles of articles to display
+ *      descs           -A string array containing the descriptions of the articles to display
  *      article_List    -A ListView object which corresponds to the ListView in the activity
  *      myfragment      -The ArticleList fragment where the action happens
  *      my_Genre        -The genre of the articles displayed
@@ -36,8 +37,9 @@ import java.util.Vector;
  *      app_Articles    -ArrayList containing all article data
  */
 public class ArticleListActivity extends ActionBarActivity {
-    private int numArticles;
+    private int num_Articles;
     private String[] articles;
+    private String[] descs;
     private int[] images;
     private int[] ids;
     private ListView article_List;
@@ -190,20 +192,21 @@ public class ArticleListActivity extends ActionBarActivity {
         if (!(my_Genre.equals(getResources().getString(R.string.top)))) { //Top News
             for (int i = 0; i < app_Articles.size(); i++) {
                 if (app_Articles.get(i).get_Genre().equals(my_Genre))
-                { numArticles++; }
+                { num_Articles++; }
             }
         }
         else { //Other Genres
             for (int i = 0; i < app_Articles.size(); i++) {
                 if (app_Articles.get(i).is_Top())
-                { numArticles++; }
+                { num_Articles++; }
             }
         }
 
         //Initialize arrays to proper article number
-        articles = new String[numArticles];
-        images = new int[numArticles];
-        ids = new int[numArticles];
+        articles = new String[num_Articles];
+        descs = new String[num_Articles];
+        images = new int[num_Articles];
+        ids = new int[num_Articles];
 
         //Go through all articles and pick out the ones that we want to look at.
         int counter = 0;
@@ -211,6 +214,7 @@ public class ArticleListActivity extends ActionBarActivity {
             for (int i = 0; i < app_Articles.size(); i++) {
                 if (app_Articles.get(i).get_Genre().equals(my_Genre))
                 {   articles[counter] = app_Articles.get(i).get_Title();
+                    descs[counter] = app_Articles.get(i).get_Desc();
                     images[counter] = app_Articles.get(i).get_image_ID();
                     ids[counter] = app_Articles.get(i).get_Article_ID();
                     counter++; }
@@ -220,6 +224,7 @@ public class ArticleListActivity extends ActionBarActivity {
             for (int i = 0; i < app_Articles.size(); i++) { //Other genres
                 if (app_Articles.get(i).is_Top())
                 {   articles[counter] = app_Articles.get(i).get_Title();
+                    descs[counter] = app_Articles.get(i).get_Desc();
                     images[counter] = app_Articles.get(i).get_image_ID();
                     ids[counter] = app_Articles.get(i).get_Article_ID();
                     counter++; }
@@ -238,9 +243,9 @@ public class ArticleListActivity extends ActionBarActivity {
     /* Sets this activity's article list adapter to display Title, image, and description. */
     protected void set_Article_List_Adapter(View V) {
         //Get the articles into adapter form
-        article_Selection article_Data[] = new article_Selection[numArticles];
-        for (int i = 0; i < numArticles; i++)
-        { article_Data[i] = new article_Selection(images[i], articles[i], ids[i]); }
+        article_Selection article_Data[] = new article_Selection[num_Articles];
+        for (int i = 0; i < num_Articles; i++)
+        { article_Data[i] = new article_Selection(images[i], articles[i], descs[i], ids[i]); }
 
         //Then adapt the list to the proper format with the proper data
         article_Selection_Adapter adapter = new article_Selection_Adapter(this, article_Data);

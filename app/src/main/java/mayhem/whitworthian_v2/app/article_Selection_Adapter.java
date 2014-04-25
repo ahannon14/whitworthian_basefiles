@@ -1,6 +1,7 @@
 package mayhem.whitworthian_v2.app;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +46,10 @@ public class article_Selection_Adapter extends ArrayAdapter<article_Selection> {
         try{
             holder.img_Icon = (ImageView) rowView.findViewById(R.id.article_Img_Icon);
             holder.txt_Title = (TextView) rowView.findViewById(R.id.article_Title);
+            holder.txt_Desc = (TextView) rowView.findViewById(R.id.article_Desc);
             holder.txt_Title.setText(data[position].get_Title());
             holder.img_Icon.setImageResource(data[position].get_Icon());
+            holder.txt_Desc.setText(trim_Desc(data[position].get_Desc()));
         }
         catch(NullPointerException bad) {
             bad.printStackTrace();
@@ -55,9 +58,15 @@ public class article_Selection_Adapter extends ArrayAdapter<article_Selection> {
         return rowView;
     }
 
+    /* Replace ellipse in description */
+    private String trim_Desc(String desc) {
+        return desc.replace(" [&#038;hellip", "...");
+    }
+
     /* A data structure which holds the layout resources being filled. */
     static class article_Selection_Holder {
         private ImageView img_Icon = null;
         private TextView txt_Title = null;
+        private TextView txt_Desc = null;
     }
 }

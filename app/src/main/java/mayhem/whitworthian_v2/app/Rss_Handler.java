@@ -58,6 +58,8 @@ public class Rss_Handler extends DefaultHandler {
             } else if (local.contains("Arts & Culture")) {
                 this_Article.set_Article_Genre("Arts & Culture");
             }
+        } else if (localName.equalsIgnoreCase("description")) {
+            this_Article.set_Article_Desc(chars.toString());
         }
 
         // If this is the end of the article (end of an item and not the top item of the feed), then
