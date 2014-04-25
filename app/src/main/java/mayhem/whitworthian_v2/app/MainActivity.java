@@ -1,5 +1,7 @@
 package mayhem.whitworthian_v2.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -100,6 +102,25 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /*Pops up an alert dialog saying that the connection failed */
+    //TODO: Make this do something better than just back out to the home page.
+    private void show_Bad_Gather() {
+        new AlertDialog.Builder(this)
+                .setTitle("Connection failed")
+                .setMessage("Fetching data from thewhitworthian.com failed.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Go back to home
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
     /*Opens up a background AsyncTask which fetches all of the data from the website */
     private class FetchArticlesTask extends AsyncTask<URL, String, ArrayList<article>> {
         /*doInBackground is where the action happens, connection is made here, and data is
@@ -111,34 +132,55 @@ public class MainActivity extends ActionBarActivity {
         protected ArrayList<article> doInBackground(URL... urls) {
             ArrayList<article> arrays[] = new ArrayList[NUM_GENRES];
 
-            for (int i = 0; i < NUM_GENRES; i++) { // loop through all feeds
-                Rss_Handler handler = new Rss_Handler(i * 10000); //Create our custom handler
-                try {
-                    //Setup for connection
-                    SAXParserFactory factory = SAXParserFactory.newInstance();
-                    SAXParser saxParser = factory.newSAXParser();
-                    XMLReader xmlReader = saxParser.getXMLReader();
-                    xmlReader.setContentHandler(handler); //Tailor our parsing to our needs
+            if (is_Network_Connected()) {
+                for (int i = 0; i < NUM_GENRES; i++) { // loop through all feeds
+                    Rss_Handler handler = new Rss_Handler(i * 10000); //Create our custom handler
+                    try {
+                        //Setup for connection
+                        SAXParserFactory factory = SAXParserFactory.newInstance();
+                        SAXParser saxParser = factory.newSAXParser();
+                        XMLReader xmlReader = saxParser.getXMLReader();
+                        xmlReader.setContentHandler(handler); //Tailor our parsing to our needs
 
-                    //Set the input as the current feed's stream & parse
-                    InputSource my_Input = new InputSource(urls[i].openStream());
-                    xmlReader.parse(my_Input);
+                        //Set the input as the current feed's stream & parse
+                        InputSource my_Input = new InputSource(urls[i].openStream());
+                        xmlReader.parse(my_Input);
 
-                    arrays[i] = handler.getArticleList(); //store the data.
+                        arrays[i] = handler.getArticleList(); //store the data.
 
-                } catch (IOException bad) {
-                    bad.printStackTrace();
-                    break;
-                } catch (SAXException bad) {
-                    bad.printStackTrace();
-                    break;
-                } catch (ParserConfigurationException bad) {
-                    bad.printStackTrace();
-                    break;
+                    } catch (IOException bad) {
+                        bad.printStackTrace();
+                        break;
+                    } catch (SAXException bad) {
+                        bad.printStackTrace();
+                        break;
+                    } catch (ParserConfigurationException bad) {
+                        bad.printStackTrace();
+                        break;
+                    } catch(Exception e) {
+                        if (e != null) {
+                            e.printStackTrace();
+                        } else {
+                            show_Bad_Gather();
+                        }
+
+                    }
                 }
+            }
+            else {
+                show_Bad_Gather();
             }
             return combineArrays(arrays); // Combines the array list
         }
+
+        /*Check to see if connected to a network*/
+        private boolean is_Network_Connected() {
+            final ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.getState() == NetworkInfo.State.CONNECTED;
+        }
+
+
 
         /*Combine an array of ArrayLists of articles into one ArrayList of articles. */
         private ArrayList<article> combineArrays (ArrayList<article>[] arrays) {
