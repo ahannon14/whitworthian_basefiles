@@ -16,43 +16,54 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/** This is the GenreListActivity.
+ *  Includes the following functionality:
+ *  -Receives articles under-the-hood from article list
+ *  -Displays genres to the user
+ *  -Responds to user input by opening an article list page or searching.
+ *
+ *  Contains the following class variables:
+ *      NUM_GENRES:         The number of genres to display --> HARDCODED CONSTANT
+ *      genres:             A string array of all possible genres
+ *      genre_List:         A ListView item, where the genres are listed.
+ *      my_Genre_Fragment:  The fragment in which all of the action happens
+ *      app_Articles        ArrayList containing all article data
+ */
 public class GenreListActivity extends ActionBarActivity {
-    /* Create class variables:
-        numGenres       - the total number of news genres, including top news
-        genres          - string array which contains the genre values
-        genre_List      - the list view object which displays the genres
-        myGenreFragment - contains the view fragment which the app display occurs on.
-     */
-    final int numGenres = 5;
-    private String[] genres = new String[numGenres];
+    final int NUM_GENRES = 5;
+    private String[] genres = new String[NUM_GENRES];
     private ListView genre_List;
-    private PlaceholderFragment myGenrefragment = new PlaceholderFragment();
+    private PlaceholderFragment my_Genre_Fragment = new PlaceholderFragment();
     private ArrayList<article> app_Articles;
 
 
-    @Override  //Create the activity
+    /* Creates the activity, sets the title string, and gets the data for all articles */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_genre_list);
 
-        //The genre list view is always titled "The Whitworthian"
-        setTitle("The Whitworthian");
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, myGenrefragment).commit();
+                    .add(R.id.container, my_Genre_Fragment).commit();
         }
 
+        //The genre list view is always titled "The Whitworthian"
+        setTitle(getResources().getString(R.string.app_name));
         get_Article_Data();
     }
 
-    @Override //set up the options menu and store data in the appropriate fragment
+    /* After OnCreate, OnCreateOptionsMenu is called under-the-hood Here the search view
+    * is initialized, and click-handling of the genre list is set up.
+    * NOTE: article list is filled out here and its event handling is set up.  If put in
+    * OnCreate, this crashes.  Ideally, a better alternative should be found.*/
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.genre_list, menu);
 
-        /*
+        //TODO: Make search work
+        /* ATTEMPS AT MAKING SEARCH WORK
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
@@ -66,8 +77,10 @@ public class GenreListActivity extends ActionBarActivity {
         */
 
 
+        //TODO: Move this elsewhere
+
         //Fills the genre view fragment
-        View V = myGenrefragment.rootView;
+        View V = my_Genre_Fragment.rootView;
         fill_Genre_String();
         get_Genre_List(V);
         set_Genre_List_Adapter(V);
@@ -77,34 +90,33 @@ public class GenreListActivity extends ActionBarActivity {
         genre_List.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selected_Genre = genres[position];
-                genre_Item_Click(view, selected_Genre);
+                genre_Item_Click(selected_Genre);
             }
         });
 
         return true;
     }
 
+    /*Handles all input for the top action bar. */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) { //Settings
             return true;
         }
-        else if (id == R.id.action_search) {
+        else if (id == R.id.action_search) { //Search
+            //TODO: Make Search Work
             onSearchRequested();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    //Fills up the genres array from data in strings.xml
+    /* Fills  the genres array from data in strings.xml */
     protected void fill_Genre_String() {
         genres = getResources().getStringArray(R.array.news_Genres);
     }
 
-    //Gets the ID of the listview in which to display genres
+    /* Gets the ID of the ListView which to displays the genres */
     protected ListView get_Genre_List(View V) {
         if (genre_List == null) {
             genre_List = (ListView) V.findViewById(R.id.genre_List_View);
@@ -118,9 +130,9 @@ public class GenreListActivity extends ActionBarActivity {
         get_Genre_List(V).setAdapter(adapter);
     }
 
-    //Controls the behavior of the application when the genre is clicked.  Takes the name of the
-    // genre, and opens a new article view of that genre
-    public void genre_Item_Click(View view, String new_Genre) {
+    /* Controls the behavior of the application when a genre is clicked.  Takes the name of the
+     * genre, and opens a new article list of that genre */
+    public void genre_Item_Click(String new_Genre) {
         Intent article_List = new Intent(this, ArticleListActivity.class);
         article_List.putExtra("this_Genre", new_Genre);
         article_List.putParcelableArrayListExtra("my_Articles", app_Articles);
@@ -128,17 +140,15 @@ public class GenreListActivity extends ActionBarActivity {
         startActivityForResult(article_List, 1);
     }
 
+    /* Locally unpacks and tracks the article data */
     protected void get_Article_Data() {
         Bundle goodies = getIntent().getExtras();
-
         try{
             this.app_Articles = goodies.getParcelableArrayList("my_Articles");
         }
         catch(NullPointerException bad){
             this.app_Articles = new ArrayList<article>();
         }
-
-
     }
 
 

@@ -79,7 +79,7 @@ public class ArticleListActivity extends ActionBarActivity {
 
         //Fills the article list with the appropriate articles
         View V = myfragment.rootView;
-        fill_Article_String();
+        fill_Article_Local_Data();
         get_Article_List(V);
         set_Article_List_Adapter(V);
 
@@ -181,54 +181,53 @@ public class ArticleListActivity extends ActionBarActivity {
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
-    //Fill in string array of article titles
-    protected void fill_Article_String() {
-        if (!(my_Genre.equals("Top News"))) {
+    /* Fills in local arrays: "articles" "images" and "ids"
+     * Note that top news articles are tracked with the boolean is_Top() method, whereas
+     * all other genres are tracked by their genre strings.
+     */
+    protected void fill_Article_Local_Data() {
+        //Figure out how many articles there are
+        if (!(my_Genre.equals(getResources().getString(R.string.top)))) { //Top News
             for (int i = 0; i < app_Articles.size(); i++) {
                 if (app_Articles.get(i).get_Genre().equals(my_Genre))
-                {
-                    numArticles++;
-                }
+                { numArticles++; }
             }
         }
-        else {
+        else { //Other Genres
             for (int i = 0; i < app_Articles.size(); i++) {
                 if (app_Articles.get(i).is_Top())
-                {
-                    numArticles++;
-                }
+                { numArticles++; }
             }
         }
+
+        //Initialize arrays to proper article number
         articles = new String[numArticles];
         images = new int[numArticles];
         ids = new int[numArticles];
 
+        //Go through all articles and pick out the ones that we want to look at.
         int counter = 0;
-        if (!(my_Genre.equals("Top News"))){
+        if (!(my_Genre.equals(getResources().getString(R.string.top)))){  //Top News
             for (int i = 0; i < app_Articles.size(); i++) {
                 if (app_Articles.get(i).get_Genre().equals(my_Genre))
-                {
-                    articles[counter] = app_Articles.get(i).get_Title();
+                {   articles[counter] = app_Articles.get(i).get_Title();
                     images[counter] = app_Articles.get(i).get_image_ID();
                     ids[counter] = app_Articles.get(i).get_Article_ID();
-                    counter++;
-                }
+                    counter++; }
             }
         }
         else {
-            for (int i = 0; i < app_Articles.size(); i++) {
+            for (int i = 0; i < app_Articles.size(); i++) { //Other genres
                 if (app_Articles.get(i).is_Top())
-                {
-                    articles[counter] = app_Articles.get(i).get_Title();
+                {   articles[counter] = app_Articles.get(i).get_Title();
                     images[counter] = app_Articles.get(i).get_image_ID();
                     ids[counter] = app_Articles.get(i).get_Article_ID();
-                    counter++;
-                }
+                    counter++; }
             }
         }
     }
 
-    //finds the article list element for the program to fill it with article titles
+    /* Returns this activity's article list ID. */
     protected ListView get_Article_List(View V) {
         if (article_List == null) {
             article_List = (ListView) V.findViewById(mayhem.whitworthian_v2.app.R.id.article_List_View);
@@ -236,22 +235,19 @@ public class ArticleListActivity extends ActionBarActivity {
         return article_List;
     }
 
-    //Create the article list adapter so that it can contain more complex elements than just the
-    // title.
+    /* Sets this activity's article list adapter to display Title, image, and description. */
     protected void set_Article_List_Adapter(View V) {
-        //Makes an array of article selections (which can contain title, image id, and article id.
+        //Get the articles into adapter form
         article_Selection article_Data[] = new article_Selection[numArticles];
         for (int i = 0; i < numArticles; i++)
-        {
-            //Loads article data
-            article_Data[i] = new article_Selection(images[i], articles[i], ids[i]);
-        }
-        //Puts data into the article list
+        { article_Data[i] = new article_Selection(images[i], articles[i], ids[i]); }
+
+        //Then adapt the list to the proper format with the proper data
         article_Selection_Adapter adapter = new article_Selection_Adapter(this, article_Data);
         get_Article_List(V).setAdapter(adapter);
     }
 
-    //loads the appropriate article upon selection.
+    /* On Click, loads the appropriate article */
     public void load_Article_View(View view, int position) {
         Intent article_View = new Intent(this, ArticleViewActivity.class);
         article_View.putExtra("my_Genre", my_Genre);
@@ -266,9 +262,7 @@ public class ArticleListActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-
         public View rootView;
-
         public PlaceholderFragment() {
         }
 

@@ -41,14 +41,23 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+/** This is the MainActivity.
+ *  Includes the following functionality:
+ *  -Retrieves article data from RSS feeds
+ *  -Opens a Top News Article List
+ *
+ *  Contains the following class variables:
+ *      app_Articles:       ArrayList containing all article data
+ *      NUM_GENRES:         The total number of genres -- HARDCODED
+ *      urls:               An array of URLs from which to obtain data through RSS
+ */
 public class MainActivity extends ActionBarActivity {
     private ArrayList<article> app_Articles;
-    private int num_Genres = 5;
-    private URL urls[] = new URL[num_Genres];
-    private XmlPullParserFactory xmlFactoryObject;
-    private XmlPullParser myparser;
+    private final int NUM_GENRES = 5;
+    private URL urls[] = new URL[NUM_GENRES];
 
 
+    /* Creates the layout, fills the urls array, and fetches all data from thewhitworthian.com */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +70,13 @@ public class MainActivity extends ActionBarActivity {
         }
 
 
-        fill_URLs();
+        fill_URLs(); // fill url array
 
-        new FetchArticlesTask().execute(this.urls);
+        new FetchArticlesTask().execute(this.urls); // fetch data
     }
 
+    /* Inflates options menu without functionality */
+    //TODO: Add a refresh if the program loses internet connection, or something of the sort
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -75,6 +86,7 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    /*Fills the URL string with all appropriate feeds */
     private void fill_URLs() {
         try{
             urls[0] = new URL("http://www.thewhitworthian.com/feed/");
@@ -88,26 +100,31 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /*Opens up a background AsyncTask which fetches all of the data from the website */
     private class FetchArticlesTask extends AsyncTask<URL, String, ArrayList<article>> {
+        /*doInBackground is where the action happens, connection is made here, and data is
+         * collected.
+         */
+        //TODO: Fix crash on loss of internet connectivity.
+        //TODO: Try to make the data collection and storing cleaner/more efficient
         @Override
         protected ArrayList<article> doInBackground(URL... urls) {
-            ArrayList<article> arrays[] = new ArrayList[num_Genres];
+            ArrayList<article> arrays[] = new ArrayList[NUM_GENRES];
 
-
-            for (int i = 0; i < num_Genres; i++) {
-                Rss_Handler handler = new Rss_Handler(i * 10000);
+            for (int i = 0; i < NUM_GENRES; i++) { // loop through all feeds
+                Rss_Handler handler = new Rss_Handler(i * 10000); //Create our custom handler
                 try {
+                    //Setup for connection
                     SAXParserFactory factory = SAXParserFactory.newInstance();
                     SAXParser saxParser = factory.newSAXParser();
                     XMLReader xmlReader = saxParser.getXMLReader();
+                    xmlReader.setContentHandler(handler); //Tailor our parsing to our needs
 
-
-                    xmlReader.setContentHandler(handler);
-
+                    //Set the input as the current feed's stream & parse
                     InputSource my_Input = new InputSource(urls[i].openStream());
                     xmlReader.parse(my_Input);
 
-                    arrays[i] = handler.getArticleList();
+                    arrays[i] = handler.getArticleList(); //store the data.
 
                 } catch (IOException bad) {
                     bad.printStackTrace();
@@ -119,53 +136,45 @@ public class MainActivity extends ActionBarActivity {
                     bad.printStackTrace();
                     break;
                 }
-
             }
-
-
-            return combineArrays(arrays);
+            return combineArrays(arrays); // Combines the array list
         }
 
-        //Combine an array of arraylists of articles into one arraylist of articles.
+        /*Combine an array of ArrayLists of articles into one ArrayList of articles. */
         private ArrayList<article> combineArrays (ArrayList<article>[] arrays) {
-            boolean accept = true;
+            boolean accept = true; //Only accept articles that aren't in the list already
             ArrayList<article> all_articles = new ArrayList<article>();
-            for(int i = 0; i < num_Genres; i++) {
-                for(int j = 0; j < arrays[i].size(); j++) {
-                    for(int k = 0; k < all_articles.size(); k++) {
-                        if (all_articles.get(k).get_Title().equals(arrays[i].get(j).get_Title())){
-                            accept = false;
-                        }
-                    }
-                    if (i == 0) {
-                        arrays[i].get(j).set_Article_Is_Top(true);
-                    }
-                    else {
-                        arrays[i].get(j).set_Article_Is_Top(false);
-                    }
-                    if (accept) {
-                        all_articles.add(arrays[i].get(j));
-                    }
-                    else {
-                        accept = true;
-                    }
-                }
 
+            for(int i = 0; i < NUM_GENRES; i++) { //loop through genres
+                for(int j = 0; j < arrays[i].size(); j++) { //loop through articles in this genre
+                    for(int k = 0; k < all_articles.size(); k++) { //loop through stored articles
+                        //Don't accept articles we already have
+                        if (all_articles.get(k).get_Title().equals(arrays[i].get(j).get_Title()))
+                        { accept = false;}
+                    }
+                    //Mark top news articles as top news
+                    if (i == 0) { arrays[i].get(j).set_Article_Is_Top(true); }
+                    else { arrays[i].get(j).set_Article_Is_Top(false); }
+
+                    //Add articles we're accepting to the array
+                    if (accept) { all_articles.add(arrays[i].get(j)); }
+                    else { accept = true; }
+                }
             }
             return all_articles;
         }
 
+        //TODO: Add some text above load wheel so user knows stuff is happening
         @Override
         protected void onProgressUpdate(String... progress) {
             //Display some new text above scroll wheel
         }
 
+        /* After articles are gathered, this opens up the Top News article list*/
         @Override
         protected void onPostExecute(ArrayList<article> result) {
-            // return null;showDialog("Downloaded " + result + " bytes");
-
             super.onPostExecute(result);
-            // After completing http call
+
             app_Articles = result;
             Intent article_List = new Intent(MainActivity.this, ArticleListActivity.class);
             article_List.putExtra("this_Genre", "Top News");
@@ -178,6 +187,8 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /*Handles item menu click */
+    //TODO: Add refresh functionality
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

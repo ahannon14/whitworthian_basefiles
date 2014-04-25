@@ -6,60 +6,43 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
+/**
+ * This class handles the RSS feed, and sorts its data.  Contains the following:
+ * this_Article:        An article object which fills with the info of the current article
+ * article_List:        An ArrayList of articles; where all articles are stored from this feed
+ * counter:             An integer which assigns IDs to the articles for tracking purposes
+ * articlesAdded:       How many articles are in article_List
+ * ARTICLES_LIMIT:      Total number of articles allowed to be pulled from the feed
+ * chars:               A buffer which reads in characters from the RSS feed.
+ */
 public class Rss_Handler extends DefaultHandler {
-
-    // Feed and Article objects to use for temporary storage
     private article this_Article = new article();
-    private ArrayList<article> articleList = new ArrayList<article>();
+    private ArrayList<article> article_List = new ArrayList<article>();
     private int counter= 0;
-
-    // Number of articles added so far
     private int articlesAdded = 0;
-
-    // Number of articles to download
     private static final int ARTICLES_LIMIT = 20;
-
-    //Current characters being accumulated
     StringBuffer chars = new StringBuffer();
 
-    public Rss_Handler(int id_base){
+    /*Constructor - Must be fed an ID base to keep track of different ID numbers */
+    public Rss_Handler(int id_base){counter = id_base;}
 
-        counter = id_base;
-    }
-
-
-    public ArrayList<article> getArticleList() {
-        return articleList;
-    }
-
-    /*
-     * This method is called everytime a start element is found (an opening XML marker)
-     * here we always reset the characters StringBuffer as we are only currently interested
-     * in the the text values stored at leaf nodes
-     *
-     * (non-Javadoc)
-     * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+    /* This method is called every time an XML start element ("<") is found.
+     * Reset the value of chars, as we're only interested in what's inside the node.
      */
     public void startElement(String uri, String localName, String qName, Attributes atts) {
         chars = new StringBuffer();
     }
 
     /*
-     * This method is called everytime an end element is found (a closing XML marker)
-     * here we check what element is being closed, if it is a relevant leaf node that we are
-     * checking, such as Title, then we get the characters we have accumulated in the StringBuffer
-     * and set the current Article's title to the value
+     * This method is called every time an XML end element (">") is found
+     * here we check what element is being closed, if it is a relevant leaf node (Title, Body, etc.)
+     * we keep the data inside and store that in our current this_Article
      *
-     * If this is closing the "entry", it means it is the end of the article, so we add that to the list
-     * and then reset our Article object for the next one on the stream
-     *
-     *
-     * (non-Javadoc)
-     * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+     * If it's the close of an "item" node, then we know that it's time to add this_Article to the
+     * ListArray of articles
      */
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        String genre = null;
+        //Store the title, body (encoded) and genre (a category element) of the article
         if (localName.equalsIgnoreCase("title")){
             this_Article.set_Article_Title(chars.toString());
         } else if (localName.equalsIgnoreCase("encoded")){
@@ -67,34 +50,27 @@ public class Rss_Handler extends DefaultHandler {
         } else if (localName.equalsIgnoreCase("category")) {
             String local = chars.toString();
             if (local.contains("Sports")) {
-                genre = "Sports";
-                this_Article.set_Article_Genre(genre);
+                this_Article.set_Article_Genre("Sports");
             } else if (local.contains("News")) {
-                genre = "News";
-                this_Article.set_Article_Genre(genre);
+                this_Article.set_Article_Genre("News");
             } else if (local.contains("Opinions")) {
-                genre = "Opinions";
-                this_Article.set_Article_Genre(genre);
+                this_Article.set_Article_Genre("Opinions");
             } else if (local.contains("Arts & Culture")) {
-                genre = "Arts & Culture";
-                this_Article.set_Article_Genre(genre);
+                this_Article.set_Article_Genre("Arts & Culture");
             }
-
-
         }
 
-
-
-
-        // Check if looking for article, and if article is complete
+        // If this is the end of the article (end of an item and not the top item of the feed), then
+        // store the article.
         if (localName.equalsIgnoreCase("item") && !(this_Article.get_Title().equals("The Whitworthian"))) {
-            this_Article.set_Article_ID(counter + 1);
-            this_Article.set_Article_Has_Image(false);
-            counter++;
+            this_Article.set_Article_ID(counter++);
+            this_Article.set_Article_Has_Image(false);  //Currently no articles have images.
 
-            articleList.add(this_Article);
+            //add article and reset local article.
+            article_List.add(this_Article);
             this_Article = new article();
-            // Lets check if we've hit our limit on number of articles
+
+            // Check if we've stored too many articles--if we have, back out.
             articlesAdded++;
             if (articlesAdded >= ARTICLES_LIMIT)
             {
@@ -104,16 +80,14 @@ public class Rss_Handler extends DefaultHandler {
     }
 
 
-    /*
-     * This method is called when characters are found in between XML markers, however, there is no
-     * guarante that this will be called at the end of the node, or that it will be called only once
-     * , so we just accumulate these and then deal with them in endElement() to be sure we have all the
-     * text
-     *
-     * (non-Javadoc)
-     * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
+    /* This method is called when characters are found in between XML markers.
+     * We don't know exactly when this is called (if it's at end nodes, etc., so we just store
+     * characters and deal with them in endElement
      */
     public void characters(char ch[], int start, int length) {
         chars.append(new String(ch, start, length));
     }
+
+    /* Accessors */
+    public ArrayList<article> getArticleList() {return article_List;}
 }
