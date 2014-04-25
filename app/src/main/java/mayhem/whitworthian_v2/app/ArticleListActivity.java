@@ -19,15 +19,23 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Vector;
 
+/** This is the ArticleListActivity.
+ *  Includes the following functionality:
+ *  -Receives articles under-the-hood from splash page and/or genre list
+ *  -Displays articles to the user
+ *  -Responds to user input by either opening an article, returning to genre page, or searching.
+ *
+ *  Contains the following class variables:
+ *      numArticles     -the number of articles to display
+ *      articles        -A string containing the titles of articles to display
+ *      article_List    -A ListView object which corresponds to the ListView in the activity
+ *      myfragment      -The ArticleList fragment where the action happens
+ *      my_Genre        -The genre of the articles displayed
+ *      my_Image        -The image corresponding to that genre.
+ *      my_Instance     -A boolean determining whether or not this is the root top news list.
+ *      app_Articles    -ArrayList containing all article data
+ */
 public class ArticleListActivity extends ActionBarActivity {
-    /* Variables for ArticleListActivity
-        numArticles     -the number of articles to display
-        articles        -A string containing the titles of articles to display
-        article_List    -A ListView object which corresponds to the ListView in the activity
-        myfragment      -The ArticleList fragment where the action happens
-        my_Genre        -The genre of the articles displayed
-        my_Image        -The image corresponding to that genre.
-     */
     private int numArticles;
     private String[] articles;
     private int[] images;
@@ -37,10 +45,10 @@ public class ArticleListActivity extends ActionBarActivity {
     private String my_Genre;
     private int my_Image;
     private boolean my_Instance;
-
     private ArrayList<article> app_Articles;
 
 
+    /*When this Intent begins, OnCreate is called */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,43 +60,49 @@ public class ArticleListActivity extends ActionBarActivity {
         }
 
         //Sets up the action bar and the genre of the article list
-        setup_ActionBar_Appearance();
-        get_Article_Data();
+        Bundle goodies = getIntent().getExtras();
+        setup_ActionBar_Appearance(goodies);
+        get_Article_Data(goodies);
 
     }
 
-
+    /* After OnCreate, OnCreateOptionsMenu is called under-the-hood Here the search view
+    * is initialized.
+    * NOTE: article list is filled out here and its event handling is set up.  If put in
+    * OnCreate, this crashes.  Ideally, a better alternative should be found.*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(mayhem.whitworthian_v2.app.R.menu.article_list, menu);
+
+        //TODO: Add search view
 
         //Fills the article list with the appropriate articles
         View V = myfragment.rootView;
         fill_Article_String();
         get_Article_List(V);
         set_Article_List_Adapter(V);
-        //Waits for an article to be clicked on, then loads the appropriate view
+
+        //Sets up an event handler which waits for an article to be clicked on,
+        // then loads the appropriate view
         article_List.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 load_Article_View(view, position);
             }
         });
+
         return true;
     }
 
-
+    /* Handles user input of top action bar */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home: // back button pressed
                 // Go back to the genre list activity on back button click.
                 if(my_Instance){
+                    // If this is the root Top News view, then create the genre list
                     Intent myIntent = new Intent(this, GenreListActivity.class);
-
                     myIntent.putParcelableArrayListExtra("my_Articles", app_Articles);
                     try {
                         startActivity(myIntent);
@@ -97,42 +111,79 @@ public class ArticleListActivity extends ActionBarActivity {
                     }
                 }
                 else {
+                    // If this is any other list view, then return back to the genre list with
+                    // an OK message.
                     Intent data = new Intent();
                     data.putParcelableArrayListExtra("my_Articles", app_Articles);
                     setResult(RESULT_OK, data);
                     finish();
                 }
                 return true;
-            case mayhem.whitworthian_v2.app.R.id.action_settings:
+            case mayhem.whitworthian_v2.app.R.id.action_settings: // Settings button pressed
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    protected void get_Article_Data() {
-        Bundle goodies = getIntent().getExtras();
-
+    /* Retrieves article data from Intent Extras.  Also determines retrieves whether or not
+     * this is the root Top News instance */
+    protected void get_Article_Data(Bundle goodies) {
         try{
             this.app_Articles = goodies.getParcelableArrayList("my_Articles");
         }
         catch(NullPointerException bad){
             this.app_Articles = new ArrayList<article>();
         }
-
         try{
             this.my_Instance = goodies.getBoolean("first_Instance");
         }
         catch(NullPointerException bad){
             this.my_Instance = false;
         }
+    }
 
+    /* Fills in class genre variable and sets up the action bar's appearance*/
+    private void setup_ActionBar_Appearance(Bundle goodies){
 
+        try{
+            my_Genre = goodies.getString("this_Genre");
+
+            //Set up action bar Title
+            if (my_Genre.equals(getResources().getString(R.string.top)))
+                setTitle(R.string.app_name);
+            else
+                setTitle(my_Genre);
+
+            //Set up action bar image
+            if (my_Genre.equals(getResources().getString(R.string.news))) {
+                my_Image = R.drawable.news_box;
+                getActionBar().setIcon(my_Image);
+            } else if (my_Genre.equals(getResources().getString(R.string.sports))) {
+                my_Image = R.drawable.sports_box;
+                getActionBar().setIcon(my_Image);
+            } else if (my_Genre.equals(getResources().getString(R.string.arts_culture))) {
+                my_Image = R.drawable.ac_box;
+                getActionBar().setIcon(my_Image);
+            } else if (my_Genre.equals(getResources().getString(R.string.opinions))) {
+                my_Image = R.drawable.opinions_box;
+                getActionBar().setIcon(my_Image);
+            } else {
+                my_Image = R.drawable.ic_launcher;
+                getActionBar().setIcon(my_Image);
+
+            }
+        } catch (NullPointerException bad) {
+            my_Genre = getResources().getString(R.string.top);
+        }
+
+        ActionBar ab = getActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 
     //Fill in string array of article titles
     protected void fill_Article_String() {
-        if (!(my_Genre.equals("Top News"))){
+        if (!(my_Genre.equals("Top News"))) {
             for (int i = 0; i < app_Articles.size(); i++) {
                 if (app_Articles.get(i).get_Genre().equals(my_Genre))
                 {
@@ -193,7 +244,7 @@ public class ArticleListActivity extends ActionBarActivity {
         for (int i = 0; i < numArticles; i++)
         {
             //Loads article data
-            article_Data[i] = new article_Selection(images[i], articles[i]);
+            article_Data[i] = new article_Selection(images[i], articles[i], ids[i]);
         }
         //Puts data into the article list
         article_Selection_Adapter adapter = new article_Selection_Adapter(this, article_Data);
@@ -210,52 +261,6 @@ public class ArticleListActivity extends ActionBarActivity {
         startActivityForResult(article_View, 1);
     }
 
-    //Sets up the action bar and the genre of the article list
-    private void setup_ActionBar_Appearance(){
-        Bundle goodies = getIntent().getExtras();
-
-        try{
-            ArrayList<article> local_Articles = goodies.getParcelableArrayList("my_Articles");
-            my_Genre = goodies.getString("this_Genre");
-        }
-        catch(NullPointerException bad){
-            my_Genre = "Top News";
-        }
-
-        //Set up action bar Title
-        if (my_Genre.equals("Top News"))
-            setTitle("The Whitworthian");
-        else
-            setTitle(my_Genre);
-
-        //Set up action bar image
-        if (my_Genre.equals("News")){
-            my_Image = R.drawable.news_box;
-            getActionBar().setIcon(my_Image);
-        }
-        else if (my_Genre.equals("Sports")){
-            my_Image = R.drawable.sports_box;
-            getActionBar().setIcon(my_Image);
-        }
-        else if (my_Genre.equals("Arts & Culture")){
-            my_Image = R.drawable.ac_box;
-            getActionBar().setIcon(my_Image);
-        }
-        else if (my_Genre.equals("Opinions")){
-            my_Image = R.drawable.opinions_box;
-            getActionBar().setIcon(my_Image);
-        }
-        else{
-            my_Image = R.drawable.whitworthian_w;
-            getActionBar().setIcon(my_Image);
-
-        }
-
-
-        ActionBar ab = getActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-
-    }
 
     /**
      * A placeholder fragment containing a simple view.

@@ -11,6 +11,11 @@
     <string name="search_label">mayhem.whitworthian_v2.app.SearchActivity</string>
     <string name="search_hint">Search Articles&#8230;</string>
     <string name="action_search">Search</string>
+    <string name="sports">Sports</string>
+    <string name="arts_culture">Arts &amp; Culture</string>
+    <string name="news">News</string>
+    <string name="opinions">Opinions</string>
+    <string name="top">Top News</string>
 
     <string-array name="news_Genres">
         <item>Top News</item>

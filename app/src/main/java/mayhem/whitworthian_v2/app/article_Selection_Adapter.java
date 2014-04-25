@@ -7,47 +7,57 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
-
 /**
- * Created by Evan Anders on 4/16/14.
+ * This class adapts an article_Selection to the ListView in fragment_article_list by using
+ * the article_list_item_row layout.
+ *
+ * contains these elements:
+ *  context - the current app context
+ *  layoutResourceID - the ID of article_list_item_row
+ *
  */
 
+public class article_Selection_Adapter extends ArrayAdapter<article_Selection> {
+    private Context context;
+    private int layout_Resource_ID;
+    private article_Selection data[] = null;
 
 
-public class article_Selection_Adapter extends ArrayAdapter<article_Selection>{
-        Context context;
-        int layoutResourceId;
-        article_Selection data[] = null;
+    /* Constructor */
+    public article_Selection_Adapter(Context context, article_Selection[] data) {
+        super(context, R.layout.article_list_item_row, data);
+        this.layout_Resource_ID = R.layout.article_list_item_row;
+        this.context = context;
+        this.data = data;
+    }
+
+    /* Fills article data into the appropriate ListView */
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //Inflates the list
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(this.layout_Resource_ID, parent, false);
 
 
-        public article_Selection_Adapter(Context context, article_Selection[] data) {
-            super(context, R.layout.article_list_item_row, data);
-            this.layoutResourceId = layoutResourceId;
-            this.context = context;
-            this.data = data;
+        //Fills the list with data
+        article_Selection_Holder holder = new article_Selection_Holder();
+        try{
+            holder.img_Icon = (ImageView) rowView.findViewById(R.id.article_Img_Icon);
+            holder.txt_Title = (TextView) rowView.findViewById(R.id.article_Title);
+            holder.txt_Title.setText(data[position].get_Title());
+            holder.img_Icon.setImageResource(data[position].get_Icon());
+        }
+        catch(NullPointerException bad) {
+            bad.printStackTrace();
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.article_list_item_row, parent, false);
+        return rowView;
+    }
 
-            article_Selection_Holder holder = new article_Selection_Holder();
-            holder.imgIcon = (ImageView)rowView.findViewById(R.id.articleImgIcon);
-            holder.txtTitle = (TextView)rowView.findViewById(R.id.articleTitle);
-
-            holder.txtTitle.setText(data[position].title);
-            holder.imgIcon.setImageResource(data[position].icon);
-
-            return rowView;
-        }
-
-static class article_Selection_Holder
-{
-    ImageView imgIcon;
-    TextView txtTitle;
-}
+    /* A data structure which holds the layout resources being filled. */
+    static class article_Selection_Holder {
+        private ImageView img_Icon = null;
+        private TextView txt_Title = null;
+    }
 }
