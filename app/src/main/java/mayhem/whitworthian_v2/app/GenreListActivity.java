@@ -26,14 +26,12 @@ import java.util.ArrayList;
  *      NUM_GENRES:         The number of genres to display --> HARDCODED CONSTANT
  *      genres:             A string array of all possible genres
  *      genre_List:         A ListView item, where the genres are listed.
- *      my_Genre_Fragment:  The fragment in which all of the action happens
  *      app_Articles        ArrayList containing all article data
  */
 public class GenreListActivity extends ActionBarActivity {
     final int NUM_GENRES = 5;
     private String[] genres = new String[NUM_GENRES];
     private ListView genre_List;
-    private PlaceholderFragment my_Genre_Fragment = new PlaceholderFragment();
     private ArrayList<article> app_Articles;
 
 
@@ -45,7 +43,7 @@ public class GenreListActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, my_Genre_Fragment).commit();
+                    .add(R.id.container, new PlaceholderFragment()).commit();
         }
 
         //The genre list view is always titled "The Whitworthian"
@@ -54,15 +52,12 @@ public class GenreListActivity extends ActionBarActivity {
     }
 
     /* After OnCreate, OnCreateOptionsMenu is called under-the-hood Here the search view
-    * is initialized, and click-handling of the genre list is set up.
-    * NOTE: article list is filled out here and its event handling is set up.  If put in
-    * OnCreate, this crashes.  Ideally, a better alternative should be found.*/
-    @Override
+    * is initialized, and click-handling of the genre list is set up.*/
+    //TODO: Make search work
+     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.genre_list, menu);
-
-        //TODO: Make search work
         /* ATTEMPS AT MAKING SEARCH WORK
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -75,25 +70,6 @@ public class GenreListActivity extends ActionBarActivity {
         searchView.setIconifiedByDefault(false);
 
         */
-
-
-        //TODO: Move this elsewhere
-
-        //Fills the genre view fragment
-        View V = my_Genre_Fragment.rootView;
-        fill_Genre_String();
-        get_Genre_List(V);
-        set_Genre_List_Adapter(V);
-
-        //Sets up the genre list to wait for user input & respond to it.
-        //id & position refer to the number on the list selected
-        genre_List.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selected_Genre = genres[position];
-                genre_Item_Click(selected_Genre);
-            }
-        });
-
         return true;
     }
 
@@ -155,10 +131,7 @@ public class GenreListActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
-        //made public for access in outside class.
-        public View rootView;
-
+    public class PlaceholderFragment extends Fragment {
         public PlaceholderFragment() {
 
         }
@@ -166,8 +139,23 @@ public class GenreListActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            rootView = inflater.inflate(R.layout.fragment_genre_list,
+            View rootView = inflater.inflate(R.layout.fragment_genre_list,
                     container, false);
+
+            //Fills the genre view fragment
+            fill_Genre_String();
+            get_Genre_List(rootView);
+            set_Genre_List_Adapter(rootView);
+
+            //Sets up the genre list to wait for user input & respond to it.
+            //id & position refer to the number on the list selected
+            genre_List.setOnItemClickListener(new OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String selected_Genre = genres[position];
+                    genre_Item_Click(selected_Genre);
+                }
+            });
+
             return rootView;
         }
     }

@@ -58,8 +58,9 @@ public class article_Selection_Adapter extends ArrayAdapter<article_Selection> {
         return rowView;
     }
 
-    /* Replace ellipse in description */
+    /* Clean ellipse and dash tags in description */
     private String trim_Desc(String desc) {
+        desc = desc.replace("&#8211;", "-");
         return desc.replace(" [&#038;hellip", "...");
     }
 

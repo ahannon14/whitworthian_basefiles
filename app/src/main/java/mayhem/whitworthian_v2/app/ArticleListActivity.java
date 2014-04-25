@@ -30,7 +30,6 @@ import java.util.Vector;
  *      articles        -A string array containing the titles of articles to display
  *      descs           -A string array containing the descriptions of the articles to display
  *      article_List    -A ListView object which corresponds to the ListView in the activity
- *      myfragment      -The ArticleList fragment where the action happens
  *      my_Genre        -The genre of the articles displayed
  *      my_Image        -The image corresponding to that genre.
  *      my_Instance     -A boolean determining whether or not this is the root top news list.
@@ -43,7 +42,6 @@ public class ArticleListActivity extends ActionBarActivity {
     private int[] images;
     private int[] ids;
     private ListView article_List;
-    private PlaceholderFragment myfragment = new PlaceholderFragment();
     private String my_Genre;
     private int my_Image;
     private boolean my_Instance;
@@ -58,7 +56,7 @@ public class ArticleListActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(mayhem.whitworthian_v2.app.R.id.container, myfragment).commit();
+                    .add(mayhem.whitworthian_v2.app.R.id.container, new PlaceholderFragment()).commit();
         }
 
         //Sets up the action bar and the genre of the article list
@@ -69,30 +67,12 @@ public class ArticleListActivity extends ActionBarActivity {
     }
 
     /* After OnCreate, OnCreateOptionsMenu is called under-the-hood Here the search view
-    * is initialized.
-    * NOTE: article list is filled out here and its event handling is set up.  If put in
-    * OnCreate, this crashes.  Ideally, a better alternative should be found.*/
+    * is initialized. */
+    //TODO: Add search view
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(mayhem.whitworthian_v2.app.R.menu.article_list, menu);
-
-        //TODO: Add search view
-
-        //Fills the article list with the appropriate articles
-        View V = myfragment.rootView;
-        fill_Article_Local_Data();
-        get_Article_List(V);
-        set_Article_List_Adapter(V);
-
-        //Sets up an event handler which waits for an article to be clicked on,
-        // then loads the appropriate view
-        article_List.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                load_Article_View(view, position);
-            }
-        });
-
         return true;
     }
 
@@ -266,16 +246,29 @@ public class ArticleListActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
-        public View rootView;
+    public class PlaceholderFragment extends Fragment {
         public PlaceholderFragment() {
         }
 
+        /* Initializes Fragment and fills the fragment's layout elements with the proper data */
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            rootView = inflater.inflate(mayhem.whitworthian_v2.app.R.layout.fragment_article_list,
+            View rootView = inflater.inflate(mayhem.whitworthian_v2.app.R.layout.fragment_article_list,
                     container, false);
+
+            //Fills the article list with the appropriate articles
+            fill_Article_Local_Data();
+            get_Article_List(rootView);
+            set_Article_List_Adapter(rootView);
+
+            //Sets up an event handler which waits for an article to be clicked on,
+            // then loads the appropriate view
+            article_List.setOnItemClickListener(new OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    load_Article_View(view, position);
+                }
+            });
             return rootView;
         }
     }

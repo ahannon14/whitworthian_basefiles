@@ -32,7 +32,6 @@ import java.util.ArrayList;
  *  my_Image_URL:       A string containing the article's image's URL, if available.
  *  my_Title:           A string containing the title of the article
  *  my_Body:            A spanned string containing the body of the article, likely in HTML
- *  my_Fragment:        The Activity fragment in which the article view is actually shown.
  *  app_articles:       All of the articles gathered on the splash screen, so they don't disappear.
  *  list_Instance:      A boolean of whether or not the parent article list is the root Top News
  */
@@ -44,7 +43,6 @@ public class ArticleViewActivity extends ActionBarActivity {
     private String my_Image_URL;
     private String my_Title;
     private Spanned my_Body;
-    private PlaceholderFragment my_Fragment = new PlaceholderFragment();
     private ArrayList<article> app_Articles;
     private boolean list_Instance;
 
@@ -56,7 +54,7 @@ public class ArticleViewActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, my_Fragment).commit();
+                    .add(R.id.container, new PlaceholderFragment()).commit();
         }
 
         //Set up local variables
@@ -68,28 +66,12 @@ public class ArticleViewActivity extends ActionBarActivity {
 
 
     /*After OnCreate, OnCreateOptionsMenu is called under-the-hood Here the search view
-    * is initialized.
-    * NOTE: article view fragment loads all of its data here, there must be a better place for
-    * it...*/
-    @Override
+    * is initialized. */
+    //TODO: Add Search Button
+     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.article_view, menu);
-
-        //TODO: Move this somewhere else.
-
-        View V = my_Fragment.getView();
-
-        //Set the Title
-        final TextView title_Text = (TextView) V.findViewById(R.id.article_title);
-        title_Text.setText(my_Title);
-
-        //Set the Body
-        final TextView body_Text = (TextView) V.findViewById(R.id.article_content);
-        body_Text.setText(my_Body);
-
-        //Set the Image
-        set_Banner_Image(V);
         return true;
     }
 
@@ -206,18 +188,32 @@ public class ArticleViewActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
-        //made public element for outside access
-        public View rootView;
-
+    public class PlaceholderFragment extends Fragment {
         public PlaceholderFragment() {
         }
 
+        /*Initializes fragment.  Puts data in the proper text fields and sets the image. */
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_article_view,
                     container, false);
+
+            try {
+                //Set the Title
+                final TextView title_Text = (TextView) rootView.findViewById(R.id.article_title);
+                title_Text.setText(my_Title);
+
+                //Set the Body
+                final TextView body_Text = (TextView) rootView.findViewById(R.id.article_content);
+                body_Text.setText(my_Body);
+
+                //Set the Image
+                set_Banner_Image(rootView);
+            }
+            catch(NullPointerException bad){
+                bad.printStackTrace();
+            }
             return rootView;
         }
     }
