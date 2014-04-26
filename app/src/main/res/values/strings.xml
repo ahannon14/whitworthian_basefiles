@@ -16,6 +16,9 @@
     <string name="news">News</string>
     <string name="opinions">Opinions</string>
     <string name="top">Top News</string>
+    <string name="exit">Exit</string>
+    <string name="retry">Try Again</string>
+    <string name="action_refresh">Refresh</string>
 
     <string-array name="news_Genres">
         <item>Top News</item>

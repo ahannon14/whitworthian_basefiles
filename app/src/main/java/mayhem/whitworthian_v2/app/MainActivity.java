@@ -12,12 +12,16 @@ import android.os.Handler;
 import android.os.NetworkOnMainThreadException;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,11 +56,14 @@ import javax.xml.parsers.SAXParserFactory;
  *      app_Articles:       ArrayList containing all article data
  *      NUM_GENRES:         The total number of genres -- HARDCODED
  *      urls:               An array of URLs from which to obtain data through RSS
+ *      alert:              A dialog that tells the user something went bad
  */
 public class MainActivity extends ActionBarActivity {
     private ArrayList<article> app_Articles;
     private final int NUM_GENRES = 5;
-    private URL urls[] = new URL[NUM_GENRES];
+    private final URL urls[] = new URL[NUM_GENRES];
+    private AlertDialog.Builder alert;
+    private ProgressBar my_Progress_Bar;
 
 
     /* Creates the layout, fills the urls array, and fetches all data from thewhitworthian.com */
@@ -73,8 +80,9 @@ public class MainActivity extends ActionBarActivity {
 
 
         fill_URLs(); // fill url array
+        alert = make_Bad_Gather();
 
-        new FetchArticlesTask().execute(this.urls); // fetch data
+        app_Articles = null;
     }
 
     /* Inflates options menu without functionality */
@@ -102,13 +110,18 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    /*Pops up an alert dialog saying that the connection failed */
-    //TODO: Make this do something better than just back out to the home page.
-    private void show_Bad_Gather() {
-        new AlertDialog.Builder(this)
+    /*Pops up an alert dialog saying that the connection failed Gives user the option to retry */
+    private AlertDialog.Builder make_Bad_Gather() {
+        return new AlertDialog.Builder(getApplicationContext())
                 .setTitle("Connection failed")
                 .setMessage("Fetching data from thewhitworthian.com failed.")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        new FetchArticlesTask().execute(urls); // fetch data
+                        if(app_Articles == null) { show_Bad_Gather(); }
+                    }
+                })
+                .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //Go back to home
                         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -117,8 +130,11 @@ public class MainActivity extends ActionBarActivity {
                         startActivity(intent);
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                .setIcon(android.R.drawable.ic_dialog_alert);
+    }
+
+    private void show_Bad_Gather() {
+            alert.show();
     }
 
     /*Opens up a background AsyncTask which fetches all of the data from the website */
@@ -161,14 +177,14 @@ public class MainActivity extends ActionBarActivity {
                         if (e != null) {
                             e.printStackTrace();
                         } else {
-                            show_Bad_Gather();
+                            return null;
                         }
 
                     }
                 }
             }
             else {
-                show_Bad_Gather();
+                return null;
             }
             return combineArrays(arrays); // Combines the array list
         }
@@ -217,6 +233,22 @@ public class MainActivity extends ActionBarActivity {
         protected void onPostExecute(ArrayList<article> result) {
             super.onPostExecute(result);
 
+            if(result==null) {
+                //TODO: Figure out how to make this not crash.
+                runOnUiThread(new Runnable() {
+
+                    public void run() {
+
+                        Toast.makeText(getApplicationContext(), "Internet Connection Failed.", Toast.LENGTH_SHORT).show();
+                        hide_Progress();
+
+
+                    }
+                });
+                //show_Bad_Gather();
+                return;
+            }
+
             app_Articles = result;
             Intent article_List = new Intent(MainActivity.this, ArticleListActivity.class);
             article_List.putExtra("this_Genre", "Top News");
@@ -236,17 +268,32 @@ public class MainActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                return true;
+            case R.id.action_refresh:
+                my_Progress_Bar.setVisibility(View.VISIBLE);
+                new FetchArticlesTask().execute(this.urls);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    /*Initialize the progress bar */
+    public void init_Progress_Bar(View view) {
+        my_Progress_Bar = (ProgressBar) view.findViewById(R.id.news_Load_Bar);
+    }
+
+    /*Hide progress bar */
+    public void hide_Progress() {
+        my_Progress_Bar.setVisibility(View.INVISIBLE);
     }
 
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
         }
@@ -255,6 +302,10 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            init_Progress_Bar(rootView); //Initialize progress bar
+            new FetchArticlesTask().execute(urls); // fetch data
+
             return rootView;
         }
     }
