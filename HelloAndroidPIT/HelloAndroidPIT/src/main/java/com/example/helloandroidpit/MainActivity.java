@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -68,17 +72,39 @@ public class MainActivity extends Activity {
      */
     // CHANGED TO LISTFRAGMENT FROM FRAGMENT IN ORDER TO GET ONPOSTEXECUTE TO WORK
     public static class PlaceholderFragment extends ListFragment {
+        // Content holds the article text
+        //public String content = null;
+        // articleContent holds an array of the article texts
+        public List<String> Content = new ArrayList<String>();
 
         //public TextView mRssFeed;
         public PlaceholderFragment() {
         }
 
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState){
+            ListView lv = getListView();
+            lv.setTextFilterEnabled(true);
+
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Toast.makeText(view.getContext(), ((TextView) view).getText(),
+                        Toast.LENGTH_SHORT).show();
+
+                    Intent articleContent = new Intent().setClass(PlaceholderFragment.this.getActivity(), ArticleView.class);
+                    articleContent.putExtra("article number", i);
+                    articleContent.putExtra("article content", Content.get(i));
+                    startActivity(articleContent);
+                }
+            });
+        }
         /*
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            mRssFeed = (TextView) rootView.findViewById(R.id.rss_feed);
+            //mRssFeed = (TextView) rootView.findViewById(R.id.rss_feed);
             return rootView;
         }
         */
@@ -171,7 +197,12 @@ public class MainActivity extends Activity {
             // Feeds each "item" into readItem
             private List<String> readChannel(XmlPullParser parser)
                     throws IOException, XmlPullParserException {
+
+                // items holds the article titles
                 List<String> items = new ArrayList<String>();
+                // content holds the article content
+                //List<String> content = new ArrayList<String>();
+
                 parser.require(XmlPullParser.START_TAG, null, "channel");
                 while (parser.next() != XmlPullParser.END_TAG) {
                     if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -179,18 +210,25 @@ public class MainActivity extends Activity {
                     }
                     String name = parser.getName();
                     if (name.equals("item")) {
-                        items.add(readItem(parser));
-                    } else {
+                        items.add(readItem(parser)/*[0]*/); // [0] holds the article titles
+                    }/*
+                    else if (name.equals("content:encoded")){
+                        content.add(readItem(parser)/*[1]*///); // [1] holds the article content
+                    /*}*/
+                    else {
                         skip(parser);
                     }
                 }
                 return items;
             }
 
-            // Takes each "item" and parses based on "title"
-            // Feeds the title into the readTitle, to return the title of an article
+
+            // Takes each "item" and parses based on "title" and "content"
+            // Feeds the title into the readTitle, to return the title of an article [0]
+            // Feeds the content into the readContent, to return the content of an article [1]
             private String readItem(XmlPullParser parser) throws XmlPullParserException, IOException {
                 String result = null;
+                //String content = null;
                 parser.require(XmlPullParser.START_TAG, null, "item");
                 while (parser.next() != XmlPullParser.END_TAG) {
                     if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -199,12 +237,18 @@ public class MainActivity extends Activity {
                     String name = parser.getName();
                     if (name.equals("title")) {
                         result = readTitle(parser);
-                    } else {
+                    }
+                    else if(name.equals("content:encoded")){
+                        //content = readContent(parser);
+                        Content.add(readContent(parser));
+                    }
+                    else {
                         skip(parser);
                     }
                 }
                 return result;
             }
+
 
             // Processes title tags in the feed.
             private String readTitle(XmlPullParser parser)
@@ -213,6 +257,15 @@ public class MainActivity extends Activity {
                 String title = readText(parser);
                 parser.require(XmlPullParser.END_TAG, null, "title");
                 return title;
+            }
+
+            // Processes content tags in the feed
+            private String readContent(XmlPullParser parser)
+                    throws IOException, XmlPullParserException{
+                parser.require(XmlPullParser.START_TAG, null, "content:encoded");
+                String content = readText(parser);
+                parser.require(XmlPullParser.END_TAG, null, "content:encoded");
+                return content;
             }
 
             // Gets the actual text in XML section and returns it
@@ -258,6 +311,7 @@ public class MainActivity extends Activity {
                 }
             }
         }
+
     }
 
 }

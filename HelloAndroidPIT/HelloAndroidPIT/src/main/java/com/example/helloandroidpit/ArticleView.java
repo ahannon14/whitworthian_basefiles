@@ -3,6 +3,7 @@ package com.example.helloandroidpit;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.TextView;
 
 public class ArticleView extends Activity {
 
@@ -49,7 +51,7 @@ public class ArticleView extends Activity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
         }
@@ -58,6 +60,15 @@ public class ArticleView extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_article_view, container, false);
+
+            Intent articleContent = this.getActivity().getIntent();
+            int articleNumber = articleContent.getIntExtra("article number",0);
+            String content = articleContent.getStringExtra("article content");
+
+            setContentView(R.layout.fragment_article_view);
+
+            TextView tv = (TextView) findViewById(R.id.article_content);
+            tv.setText(content);
             return rootView;
         }
     }
