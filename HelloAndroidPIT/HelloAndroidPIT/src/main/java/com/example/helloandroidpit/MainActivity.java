@@ -104,7 +104,11 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+<<<<<<< HEAD
             //mRssFeed = (TextView) rootView.findViewById(R.id.rss_feed);
+=======
+            mRssFeed = (TextView) rootView.findViewById(R.id.rss_feed);
+>>>>>>> 3fbd05c624d708772b99c9a8bba735d8b0fc4267
             return rootView;
         }
         */
@@ -197,12 +201,8 @@ public class MainActivity extends Activity {
             // Feeds each "item" into readItem
             private List<String> readChannel(XmlPullParser parser)
                     throws IOException, XmlPullParserException {
-
-                // items holds the article titles
+					
                 List<String> items = new ArrayList<String>();
-                // content holds the article content
-                //List<String> content = new ArrayList<String>();
-
                 parser.require(XmlPullParser.START_TAG, null, "channel");
                 while (parser.next() != XmlPullParser.END_TAG) {
                     if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -210,25 +210,18 @@ public class MainActivity extends Activity {
                     }
                     String name = parser.getName();
                     if (name.equals("item")) {
-                        items.add(readItem(parser)/*[0]*/); // [0] holds the article titles
-                    }/*
-                    else if (name.equals("content:encoded")){
-                        content.add(readItem(parser)/*[1]*///); // [1] holds the article content
-                    /*}*/
-                    else {
+                        items.add(readItem(parser));
+                    } else {
                         skip(parser);
                     }
                 }
                 return items;
             }
 
-
-            // Takes each "item" and parses based on "title" and "content"
-            // Feeds the title into the readTitle, to return the title of an article [0]
-            // Feeds the content into the readContent, to return the content of an article [1]
+            // Takes each "item" and parses based on "title"
+            // Feeds the title into the readTitle, to return the title of an article
             private String readItem(XmlPullParser parser) throws XmlPullParserException, IOException {
                 String result = null;
-                //String content = null;
                 parser.require(XmlPullParser.START_TAG, null, "item");
                 while (parser.next() != XmlPullParser.END_TAG) {
                     if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -248,8 +241,6 @@ public class MainActivity extends Activity {
                 }
                 return result;
             }
-
-
             // Processes title tags in the feed.
             private String readTitle(XmlPullParser parser)
                     throws IOException, XmlPullParserException {
@@ -267,7 +258,7 @@ public class MainActivity extends Activity {
                 parser.require(XmlPullParser.END_TAG, null, "content:encoded");
                 return content;
             }
-
+			
             // Gets the actual text in XML section and returns it
             // This function is called for readTitle and any others that need it
             // (AKA readContent, readImage, etc.)
