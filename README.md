@@ -26,6 +26,7 @@ _______________________________________________________
 <li><p>Create the following java classes:</p>
 
 <ul>
+<li>Rss_Handler</li>
 <li>article_Selection </li>
 <li>article_Selection_Adapter </li>
 <li>article </li>
@@ -37,6 +38,13 @@ _______________________________________________________
 
 <ul>
 <li>article_list_item_row </li>
+</ul>
+</li>
+
+<li><p>Create the following directory under "res" directory: xml.  Add the following files to that directory</p>
+
+<ul>
+<li>searchable.xml </li>
 </ul>
 </li>
 </ol>

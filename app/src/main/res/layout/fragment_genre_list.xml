@@ -9,25 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="mayhem.whitworthian_v2.ArticleListActivity$PlaceholderFragment" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal" >
-        <SearchView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/search_bar"
-            android:layout_gravity="right"
-            android:iconifiedByDefault="false"
-            android:focusable="false"/>
-    </LinearLayout>
-
 
 
     <ListView
         android:id="@+id/genre_List_View"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold">
     </ListView>
 
 
